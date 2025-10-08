@@ -1,0 +1,45 @@
+import { Request, Response } from 'express';
+import { duesService } from '../services/dues.service';
+import { Transaction } from '../entity/Transaction';
+import { Dues } from '../entity/Dues';
+import { PaymentType, DuesStatus } from '../types/enums';
+
+export const generateDues = async (req: Request, res: Response) => {
+  try {
+    await duesService.generateDues();
+    res.status(200).send('Dues generated successfully');
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+
+export const payDues = async (req: Request, res: Response) => {
+  const { memberId, duesId, amount } = req.body;
+
+  try {
+    const dues = await Dues.findById(duesId);
+    if (!dues) {
+      return res.status(404).send('Dues not found');
+    }
+
+    const transaction = new Transaction({
+      member: memberId,
+      amount,
+      type: PaymentType.DUES,
+      dues: duesId,
+    });
+    await transaction.save();
+
+    dues.paidAmount += amount;
+    if (dues.paidAmount >= dues.expectedAmount) {
+      dues.status = DuesStatus.PAID;
+    } else {
+      dues.status = DuesStatus.PARTIALLY_PAID;
+    }
+    await dues.save();
+
+    res.status(200).send({ transaction, dues });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
