@@ -26,7 +26,9 @@ export const register = async (req: Request, res: Response) => {
     await session.commitTransaction();
     session.endSession();
 
-    res.status(201).send({ member });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _password, ...memberData } = member.toObject();
+    res.status(201).send({ member: memberData });
   } catch (error) {
     await session.abortTransaction();
     session.endSession();
@@ -61,5 +63,7 @@ export const login = async (req: Request, res: Response) => {
   );
 
   res.cookie("token", token, { httpOnly: true });
-  res.send({ member });
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { password: _password, ...memberData } = member.toObject();
+  res.send({ member: memberData });
 };

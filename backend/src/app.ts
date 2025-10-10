@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser"; // Added
 import { errorHandler } from "./middleware/error.middleware";
 import memberRoutes from "./routes/member.routes";
 import authRoutes from "./routes/auth.routes";
@@ -20,6 +21,7 @@ app.use(
 );
 
 app.use(express.json()); // Enable JSON body parser
+app.use(cookieParser()); // Added
 
 app.use("/api/members", memberRoutes);
 app.use("/api/auth", authRoutes);

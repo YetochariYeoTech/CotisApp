@@ -42,14 +42,16 @@ function App() {
 
         {/* Protected routes with full Layout (navbar + authenticated content) */}
         <Route element={<ProtectedRoute />}>
+          {/* New route for /dues */}
+          <Route path="/dues" element={<Layout />}>
+            <Route index element={<ProtectedRoute allowedRoles={['ADMIN', 'TREASURER', 'MEMBER']}><DuesPage /></ProtectedRoute>} />
+          </Route>
+
           <Route path="/dashboard" element={<Layout />}>
             <Route index element={<DashboardPage />} />
             <Route path="members" element={<ProtectedRoute allowedRoles={['ADMIN', 'TREASURER', 'AUDITOR']} />}>
               <Route index element={<MembersPage />} />
               <Route path=":id" element={<MemberDetailsPage />} />
-            </Route>
-            <Route path="dues" element={<ProtectedRoute allowedRoles={['ADMIN', 'TREASURER', 'MEMBER']} />}>
-              <Route index element={<DuesPage />} />
             </Route>
             <Route path="events" element={<ProtectedRoute allowedRoles={['ADMIN', 'MEMBER']} />}>
               <Route index element={<EventsPage />} />
