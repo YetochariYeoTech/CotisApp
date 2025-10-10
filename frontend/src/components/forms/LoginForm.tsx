@@ -30,15 +30,15 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="form-control gap-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="form-control gap-4 bg-base-100 p-4 rounded-box">
       <div>
         <label className="label">
-          <span className="label-text font-sans">Email</span>
+          <span className="label-text font-sans text-base-content">Email</span>
         </label>
         <input
           type="email"
           placeholder="email@example.com"
-          className="input input-bordered w-full font-sans"
+          className="input input-bordered w-full font-sans text-base-content"
           {...register('email')}
         />
         {errors.email && <p className="text-error text-sm mt-1 font-sans">{errors.email.message}</p>}
@@ -46,12 +46,12 @@ const LoginForm: React.FC = () => {
 
       <div>
         <label className="label">
-          <span className="label-text font-sans">Mot de passe</span>
+          <span className="label-text font-sans text-base-content">Mot de passe</span>
         </label>
         <input
           type="password"
           placeholder="******"
-          className="input input-bordered w-full font-sans"
+          className="input input-bordered w-full font-sans text-base-content"
           {...register('password')}
         />
         {errors.password && <p className="text-error text-sm mt-1 font-sans">{errors.password.message}</p>}

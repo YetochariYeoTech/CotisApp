@@ -1,10 +1,10 @@
-import { Request, Response } from 'express';
-import { Member } from '../entity/Member';
-import { Transaction } from '../entity/Transaction';
-import * as jwt from 'jsonwebtoken';
-import { config } from '../config';
-import { startSession } from 'mongoose';
-import { PaymentType } from '../types/enums';
+import { Request, Response } from "express";
+import { Member } from "../entity/Member";
+import { Transaction } from "../entity/Transaction";
+import * as jwt from "jsonwebtoken";
+import { config } from "../config";
+import { startSession } from "mongoose";
+import { PaymentType } from "../types/enums";
 
 export const register = async (req: Request, res: Response) => {
   const { email, password, fullName, phoneNumber } = req.body;
@@ -30,6 +30,7 @@ export const register = async (req: Request, res: Response) => {
   } catch (error) {
     await session.abortTransaction();
     session.endSession();
+    console.log(error);
     res.status(400).send(error);
   }
 };
@@ -41,7 +42,7 @@ export const login = async (req: Request, res: Response) => {
     return res.status(400).send();
   }
 
-  const member = await Member.findOne({ email }).select('+password');
+  const member = await Member.findOne({ email }).select("+password");
 
   if (!member) {
     return res.status(401).send();
@@ -56,9 +57,9 @@ export const login = async (req: Request, res: Response) => {
   const token = jwt.sign(
     { userId: member._id, email: member.email, role: member.role },
     config.jwtSecret,
-    { expiresIn: '1h' }
+    { expiresIn: "1h" }
   );
 
-  res.cookie('token', token, { httpOnly: true });
+  res.cookie("token", token, { httpOnly: true });
   res.send({ member });
 };

@@ -12,32 +12,32 @@ const MembersPage: React.FC = () => {
     fetchMembers();
   }, [fetchMembers]);
 
-  if (loading) return <p className="font-sans">Chargement...</p>;
+  if (loading) return <p className="font-sans text-base-content">Chargement...</p>;
   if (error) return <p className="text-error font-sans">Erreur: {error}</p>;
 
   return (
-    <div className="p-4">
+    <div className="p-4 text-base-content">
       <h1 className="text-2xl font-bold font-serif mb-4">Membres</h1>
       <div className="overflow-x-auto bg-base-100 rounded-box shadow-xl">
         <table className="table w-full">
           <thead>
             <tr>
-              <th className="font-sans">Nom complet</th>
-              <th className="font-sans">Email</th>
-              <th className="font-sans">Numéro de téléphone</th>
-              <th className="font-sans">Rôle</th>
-              <th className="font-sans">Statut de contribution</th>
-              <th className="font-sans">Actions</th>
+              <th className="font-sans text-base-content">Nom complet</th>
+              <th className="font-sans text-base-content">Email</th>
+              <th className="font-sans text-base-content">Numéro de téléphone</th>
+              <th className="font-sans text-base-content">Rôle</th>
+              <th className="font-sans text-base-content">Statut de contribution</th>
+              <th className="font-sans text-base-content">Actions</th>
             </tr>
           </thead>
           <tbody>
             {members.map((member) => (
               <tr key={member._id}>
-                <td className="font-sans">{member.fullName}</td>
-                <td className="font-sans">{member.email}</td>
-                <td className="font-sans">{member.phoneNumber}</td>
-                <td className="font-sans">{member.role}</td>
-                <td className="font-sans">{member.contributionStatus}</td>
+                <td className="font-sans text-base-content">{member.fullName}</td>
+                <td className="font-sans text-base-content">{member.email}</td>
+                <td className="font-sans text-base-content">{member.phoneNumber}</td>
+                <td className="font-sans text-base-content">{member.role}</td>
+                <td className="font-sans text-base-content">{member.contributionStatus}</td>
                 <td>
                   <Link to={`/members/${member._id}`} className="btn btn-sm btn-info font-sans">Voir</Link>
                 </td>

@@ -6,7 +6,7 @@ interface TransactionState {
   transactions: Transaction[];
   loading: boolean;
   error: string | null;
-  fetchTransactions: () => Promise<void>; // Assuming an endpoint to get all transactions
+  fetchTransactions: () => Promise<void>;
   validateTransaction: (id: string) => Promise<void>;
 }
 
@@ -18,10 +18,8 @@ export const useTransactionStore = create<TransactionState>((set) => ({
   fetchTransactions: async () => {
     set({ loading: true, error: null });
     try {
-      // Assuming an endpoint to get all transactions
-      // const response = await api.get<Transaction[]>('/transactions');
-      // set({ transactions: response.data, loading: false });
-      set({ loading: false }); // Placeholder
+      const response = await api.get<Transaction[]>("/transactions"); // Assuming this endpoint will be added to backend
+      set({ transactions: response.data, loading: false });
     } catch (error: any) {
       set({ error: error.message, loading: false });
     }

@@ -5,9 +5,9 @@ import { navItems } from '../config/navigation';
 import ThemeToggle from './ThemeToggle';
 import { useThemeStore } from '../stores/themeStore';
 
-const Layout: React.FC = () => {
+const AuthLayout: React.FC = () => {
   const navigate = useNavigate();
-  const { user, logout } = useAuthStore();
+  const { user, logout, isAuthenticated } = useAuthStore();
   const { theme } = useThemeStore();
 
   const handleLogout = () => {
@@ -39,24 +39,30 @@ const Layout: React.FC = () => {
             </div>
             <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
               <li><Link to="/landing">Accueil</Link></li>
-              {filteredNavItems.map(item => (
+              {isAuthenticated && filteredNavItems.map(item => (
                 <li key={item.name}>
                   <Link to={item.path}>{getNavItemName(item.name)}</Link>
                 </li>
               ))}
-              {user && (
+              {isAuthenticated && user && (
                 <li>
                   <button onClick={handleLogout} className="btn btn-ghost">Se déconnecter</button>
                 </li>
               )}
+              {!isAuthenticated && (
+                <>
+                  <li><Link to="/login">Se connecter</Link></li>
+                  <li><Link to="/register">S'inscrire</Link></li>
+                </>
+              )}
             </ul>
           </div>
-          <Link to="/dashboard" className="btn btn-ghost text-xl font-serif">CotisApp</Link>
+          <Link to="/" className="btn btn-ghost text-xl font-serif">CotisApp</Link>
         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
             <li><Link to="/landing">Accueil</Link></li>
-            {filteredNavItems.map(item => (
+            {isAuthenticated && filteredNavItems.map(item => (
               <li key={item.name}>
                 <Link to={item.path}>{getNavItemName(item.name)}</Link>
               </li>
@@ -64,8 +70,14 @@ const Layout: React.FC = () => {
           </ul>
         </div>
         <div className="navbar-end gap-2">
-          {user && (
+          {isAuthenticated && user && (
             <button onClick={handleLogout} className="btn btn-ghost hidden lg:flex">Se déconnecter</button>
+          )}
+          {!isAuthenticated && (
+            <>
+              <Link to="/login" className="btn btn-ghost hidden lg:flex">Se connecter</Link>
+              <Link to="/register" className="btn btn-primary hidden lg:flex">S'inscrire</Link>
+            </>
           )}
           <ThemeToggle />
         </div>
@@ -82,4 +94,4 @@ const Layout: React.FC = () => {
   );
 };
 
-export default Layout;
+export default AuthLayout;

@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
+import AuthLayout from './components/AuthLayout';
 import LoginPage from './pages/Auth/LoginPage';
 import RegisterPage from './pages/Auth/RegisterPage';
 import DashboardPage from './pages/Dashboard/DashboardPage';
@@ -24,12 +25,14 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/unauthorized" element={<div>Accès non autorisé</div>} />
+        {/* Routes with AuthLayout (navbar visible) */}
+        <Route element={<AuthLayout />}>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/landing" element={<LandingPage />} />
+        </Route>
 
-        {/* Public route for landing page */}
-        <Route path="/landing" element={<LandingPage />} />
+        <Route path="/unauthorized" element={<div>Accès non autorisé</div>} />
 
         {/* Redirect to landing if not authenticated, else to dashboard */}
         <Route
@@ -37,6 +40,7 @@ function App() {
           element={isAuthenticated ? <Navigate to="/dashboard" /> : <Navigate to="/landing" />}
         />
 
+        {/* Protected routes with full Layout (navbar + authenticated content) */}
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<Layout />}>
             <Route index element={<DashboardPage />} />

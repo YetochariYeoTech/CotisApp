@@ -8,7 +8,6 @@ export default {
         secondary: "#60A5FA", // Lighter blue
         accent: "#10B981", // Green accent
         neutral: "#F3F4F6", // Light gray
-        "base-100": "#FFFFFF", // White for light theme background
         info: "#3ABFF8",
         success: "#36D399",
         warning: "#FBBD23",

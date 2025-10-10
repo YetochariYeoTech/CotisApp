@@ -1,7 +1,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import z from "zod";
 import { useAuthStore } from "../../stores/authStore";
 import { useNavigate } from "react-router-dom";
 
@@ -12,12 +12,12 @@ const registerSchema = z
     phoneNumber: z.string().min(10, {
       message: "Le numéro de téléphone doit contenir au moins 10 chiffres",
     }),
-    password: z.string().min(6, {
-      message: "Le mot de passe doit contenir au moins 6 caractères",
+    password: z.string().min(8, {
+      message: "Le mot de passe doit contenir au moins 8 caractères",
     }),
-    confirmPassword: z.string().min(6, {
+    confirmPassword: z.string().min(8, {
       message:
-        "La confirmation du mot de passe doit contenir au moins 6 caractères",
+        "La confirmation du mot de passe doit contenir au moins 8 caractères",
     }),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -54,15 +54,20 @@ const RegisterForm: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="form-control gap-4">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="form-control gap-4 p-4 rounded-box"
+    >
       <div>
         <label className="label">
-          <span className="label-text font-sans">Nom complet</span>
+          <span className="label-text font-sans text-base-content">
+            Nom complet
+          </span>
         </label>
         <input
           type="text"
           placeholder="John Doe"
-          className="input input-bordered w-full font-sans"
+          className="input input-bordered w-full font-sans text-base-content"
           {...register("fullName")}
         />
         {errors.fullName && (
@@ -74,12 +79,12 @@ const RegisterForm: React.FC = () => {
 
       <div>
         <label className="label">
-          <span className="label-text font-sans">Email</span>
+          <span className="label-text font-sans text-base-content">Email</span>
         </label>
         <input
           type="email"
           placeholder="email@example.com"
-          className="input input-bordered w-full font-sans"
+          className="input input-bordered w-full font-sans text-base-content"
           {...register("email")}
         />
         {errors.email && (
@@ -91,13 +96,21 @@ const RegisterForm: React.FC = () => {
 
       <div>
         <label className="label">
-          <span className="label-text font-sans">Numéro de téléphone</span>
+          <span className="label-text font-sans text-base-content">
+            Numéro de téléphone
+          </span>
         </label>
         <input
           type="tel"
           placeholder="123-456-7890"
-          className="input input-bordered w-full font-sans"
-          {...register("phoneNumber")}
+          className="input input-bordered w-full font-sans text-base-content"
+          maxLength={10}
+          onKeyPress={(event) => {
+            if (!/[0-9]/.test(event.key)) {
+              event.preventDefault();
+            }
+          }}
+          {...register('phoneNumber')}
         />
         {errors.phoneNumber && (
           <p className="text-error text-sm mt-1 font-sans">
@@ -108,12 +121,14 @@ const RegisterForm: React.FC = () => {
 
       <div>
         <label className="label">
-          <span className="label-text font-sans">Mot de passe</span>
+          <span className="label-text font-sans text-base-content">
+            Mot de passe
+          </span>
         </label>
         <input
           type="password"
           placeholder="******"
-          className="input input-bordered w-full font-sans"
+          className="input input-bordered w-full font-sans text-base-content"
           {...register("password")}
         />
         {errors.password && (
@@ -125,14 +140,14 @@ const RegisterForm: React.FC = () => {
 
       <div>
         <label className="label">
-          <span className="label-text font-sans">
+          <span className="label-text font-sans text-base-content">
             Confirmer le mot de passe
           </span>
         </label>
         <input
           type="password"
           placeholder="******"
-          className="input input-bordered w-full font-sans"
+          className="input input-bordered w-full font-sans text-base-content"
           {...register("confirmPassword")}
         />
         {errors.confirmPassword && (

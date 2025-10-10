@@ -15,16 +15,16 @@ const MemberDetailsPage: React.FC = () => {
     }
   }, [id, fetchMemberById, fetchMemberDuesReport]);
 
-  if (loading) return <p className="font-sans">Chargement...</p>;
+  if (loading) return <p className="font-sans text-base-content">Chargement...</p>;
   if (error) return <p className="text-error font-sans">Erreur: {error}</p>;
-  if (!member) return <p className="font-sans">Membre non trouvé.</p>;
+  if (!member) return <p className="font-sans text-base-content">Membre non trouvé.</p>;
 
   return (
-    <div className="p-4">
+    <div className="p-4 text-base-content">
       <h1 className="text-2xl font-bold font-serif mb-4">Détails du membre: {member.fullName}</h1>
       <div className="card bg-base-100 shadow-xl mb-4">
         <div className="card-body">
-          <h2 className="card-title font-serif">Informations personnelles</h2>
+          <h2 className="card-title font-serif text-base-content">Informations personnelles</h2>
           <p className="font-sans"><strong>Email:</strong> {member.email}</p>
           <p className="font-sans"><strong>Téléphone:</strong> {member.phoneNumber}</p>
           <p className="font-sans"><strong>Rôle:</strong> {member.role}</p>
@@ -36,34 +36,34 @@ const MemberDetailsPage: React.FC = () => {
 
       <div className="card bg-base-100 shadow-xl">
         <div className="card-body">
-          <h2 className="card-title font-serif">Rapport de cotisations</h2>
+          <h2 className="card-title font-serif text-base-content">Rapport de cotisations</h2>
           {duesReport.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="table w-full">
                 <thead>
                   <tr>
-                    <th className="font-sans">Période</th>
-                    <th className="font-sans">Montant attendu</th>
-                    <th className="font-sans">Montant payé</th>
-                    <th className="font-sans">Date d'échéance</th>
-                    <th className="font-sans">Statut</th>
+                    <th className="font-sans text-base-content">Période</th>
+                    <th className="font-sans text-base-content">Montant attendu</th>
+                    <th className="font-sans text-base-content">Montant payé</th>
+                    <th className="font-sans text-base-content">Date d'échéance</th>
+                    <th className="font-sans text-base-content">Statut</th>
                   </tr>
                 </thead>
                 <tbody>
                   {duesReport.map((duesItem, index) => (
                     <tr key={index}>
-                      <td className="font-sans">{duesItem.period}</td>
-                      <td className="font-sans">{duesItem.expectedAmount}</td>
-                      <td className="font-sans">{duesItem.paidAmount}</td>
-                      <td className="font-sans">{new Date(duesItem.dueDate).toLocaleDateString()}</td>
-                      <td className="font-sans">{duesItem.status}</td>
+                      <td className="font-sans text-base-content">{duesItem.period}</td>
+                      <td className="font-sans text-base-content">{duesItem.expectedAmount}</td>
+                      <td className="font-sans text-base-content">{duesItem.paidAmount}</td>
+                      <td className="font-sans text-base-content">{new Date(duesItem.dueDate).toLocaleDateString()}</td>
+                      <td className="font-sans text-base-content">{duesItem.status}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
           ) : (
-            <p className="font-sans">Aucun rapport de cotisations disponible.</p>
+            <p className="font-sans text-base-content">Aucun rapport de cotisations disponible.</p>
           )}
         </div>
       </div>

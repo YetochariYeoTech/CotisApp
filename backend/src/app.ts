@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import { errorHandler } from "./middleware/error.middleware";
 import memberRoutes from "./routes/member.routes";
 import authRoutes from "./routes/auth.routes";
@@ -8,6 +9,15 @@ import transactionRoutes from "./routes/transaction.routes";
 import reportRoutes from "./routes/report.routes";
 
 const app = express();
+
+// CORS configuration
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Allow requests from your frontend
+    credentials: true, // Allow cookies to be sent
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"], // Allow CRUD operations
+  })
+);
 
 app.use(express.json()); // Enable JSON body parser
 
