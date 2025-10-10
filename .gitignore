@@ -10,5 +10,6 @@
 **/.env
 error.txt
 recommendations.md
+Action.txt
 
 start-geminiCLI.bat

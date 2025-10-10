@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { LuEye, LuPencil, LuTrash2 } from 'react-icons/lu';
+import { LuEye, LuPencil } from 'react-icons/lu';
 
 const DuesTable = () => {
   const duesData = [
@@ -61,6 +60,7 @@ const DuesTable = () => {
 
   return (
     <div className="p-6">
+      <h2 className="text-2xl font-serif font-bold mb-4 text-base-content">Liste Détaillée des Cotisations</h2>
       <div className="overflow-x-auto bg-base-100 rounded-box shadow-xl">
         <table className="table w-full">
           <thead>
@@ -97,9 +97,6 @@ const DuesTable = () => {
                   </button>
                   <button className="btn btn-ghost btn-xs tooltip tooltip-bottom" data-tip="Modifier">
                     <LuPencil className="h-4 w-4" />
-                  </button>
-                  <button className="btn btn-ghost btn-xs tooltip tooltip-bottom" data-tip="Supprimer">
-                    <LuTrash2 className="h-4 w-4" />
                   </button>
                 </th>
               </tr>
