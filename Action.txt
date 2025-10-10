@@ -1,0 +1,150 @@
+🎨 Orchestration de la page Cotisation
+
+1. Structure générale (layout)
+
+Disposition en grille (Grid ou Flexbox), avec marges généreuses (p-6 sur desktop, p-3 sur mobile).
+
+Trois sections principales :
+
+Header (barre de navigation & titre)
+
+Zone principale (cotisations en cours + actions)
+
+Sidebar ou panneau complémentaire (historique, statistiques, ou notifications).
+
+Footer (optionnel, léger, avec infos légales ou contact).
+
+2. Header
+
+Fond : neutral (#F3F4F6) avec une ombre légère (shadow-md).
+
+Titre : "Cotisations" en bold 2xl (couleur primary).
+
+Bouton d’action rapide : “+ Nouvelle Cotisation”
+
+Couleur : accent (vert) → attire l’œil.
+
+Forme : pill button (arrondi xl).
+
+Micro-animation : au hover → légère élévation (translateY -2px + shadow-lg).
+
+Icônes (utiliser Lucide ou Heroicons) : cloche (notifications), profil, recherche.
+
+3. Zone principale
+   a) Carte résumé des cotisations
+
+Disposition en cards (3 à 4 cartes en desktop, slider en mobile).
+
+Chaque card affiche :
+
+Titre (ex. "Mensuelle – Janvier 2025")
+
+Montant dû → en gros texte bold primary
+
+État : payé (success vert), en retard (error rouge), en attente (warning jaune).
+
+Bouton : "Payer maintenant" (accent vert).
+
+Micro-animation :
+
+Au survol → card se lève légèrement (scale 1.02).
+
+Transition douce (ease-in-out, 200ms).
+
+b) Tableau détaillé des cotisations
+
+Un tableau clair et aéré avec colonnes :
+
+Membre | Montant | Date limite | Statut | Action
+
+Codes couleurs par statut :
+
+Payé → badge success
+
+Retard → badge error
+
+En attente → badge warning
+
+Micro-interactions :
+
+Survol d’une ligne → fond neutral + curseur pointer.
+
+Clic sur un membre → ouvre un drawer latéral avec les détails du paiement.
+
+c) Graphique / Dashboard rapide
+
+Un mini-graphique (barres ou donut) montrant :
+
+% de cotisations payées
+
+% en attente
+
+% en retard
+
+Utiliser info (#3ABFF8) pour en attente, success pour payé, error pour retard.
+
+Micro-animation : chiffres qui comptent jusqu’à leur valeur (counter animation).
+
+4. Sidebar complémentaire
+
+Historique des paiements récents → sous forme de liste verticale avec avatars, montant, statut.
+
+Carte rappel : “Prochaine cotisation dans X jours” avec un petit décompte animé.
+
+5. Footer
+
+Léger, en neutral.
+
+Lien “Contact” | “FAQ” | “Conditions d’utilisation”.
+
+6. Responsivité
+
+Mobile :
+
+Cards → slider horizontal.
+
+Tableau → transformé en liste accordéon (chaque membre affiché sous forme de bloc).
+
+Bouton principal flottant (FAB) en bas à droite : “+ Cotisation”.
+
+Tablette :
+
+2 colonnes de cards, tableau scrollable horizontalement.
+
+Desktop :
+
+Layout en 3 parties (cards + tableau + sidebar).
+
+7. Micro-animations globales
+
+Page load :
+
+Titre fade-in (0.5s).
+
+Cards apparaissent en staggered animation (0.1s de décalage entre chaque).
+
+Boutons : hover avec changement léger de couleur (ex. primary → secondary).
+
+Graphiques : animation progressive (barres qui montent, donut qui se remplit).
+
+Transitions fluides partout (ease-in-out, 200-300ms).
+
+8. Hiérarchie visuelle (couleurs & typographie)
+
+Titres principaux → primary (#3B82F6).
+
+Sous-titres → secondary (#60A5FA).
+
+Texte descriptif → gris foncé (#374151).
+
+Éléments d’action → accent (#10B981).
+
+Alertes → warning / error selon le cas.
+
+Typo recommandée :
+
+Sans-serif moderne (Inter, Poppins ou Roboto).
+
+Titres → bold.
+
+Corps → regular, lisible.
