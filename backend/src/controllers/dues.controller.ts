@@ -43,3 +43,44 @@ export const payDues = async (req: Request, res: Response) => {
     res.status(500).send(error);
   }
 };
+
+export const getTotalDuesByMember = async (req: Request, res: Response) => {
+  try {
+    const result = await Dues.aggregate([
+      {
+        $group: {
+          _id: "$member",
+          totalDues: { $sum: "$expectedAmount" },
+          totalPaid: { $sum: "$paidAmount" },
+        },
+      },
+      {
+        $lookup: {
+          from: "members",
+          localField: "_id",
+          foreignField: "_id",
+          as: "member",
+        },
+      },
+      {
+        $unwind: "$member",
+      },
+      {
+        $project: {
+          _id: 0,
+          member: {
+            _id: "$member._id",
+            firstName: "$member.firstName",
+            lastName: "$member.lastName",
+          },
+          totalDues: 1,
+          totalPaid: 1,
+          balance: { $subtract: ["$totalDues", "$totalPaid"] },
+        },
+      },
+    ]);
+    res.status(200).send(result);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};

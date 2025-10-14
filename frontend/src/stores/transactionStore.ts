@@ -20,8 +20,12 @@ export const useTransactionStore = create<TransactionState>((set) => ({
     try {
       const response = await api.get<Transaction[]>("/transactions"); // Assuming this endpoint will be added to backend
       set({ transactions: response.data, loading: false });
-    } catch (error: any) {
-      set({ error: error.message, loading: false });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        set({ error: error.message, loading: false });
+      } else {
+        set({ error: 'An unknown error occurred', loading: false });
+      }
     }
   },
 
@@ -31,8 +35,12 @@ export const useTransactionStore = create<TransactionState>((set) => ({
       await api.put(`/transactions/${id}/validate`);
       set({ loading: false });
       // Optionally refetch transactions after validation
-    } catch (error: any) {
-      set({ error: error.message, loading: false });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        set({ error: error.message, loading: false });
+      } else {
+        set({ error: 'An unknown error occurred', loading: false });
+      }
     }
   },
 }));

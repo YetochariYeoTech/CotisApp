@@ -9,3 +9,11 @@ export interface Dues {
   dueDate: string;
   status: DuesStatus;
 }
+
+export interface DuesReportItem {
+  period: string;
+  expectedAmount: number;
+  paidAmount: number;
+  dueDate: string;
+  status: DuesStatus;
+}

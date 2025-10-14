@@ -4,7 +4,7 @@ import { useAuthStore } from '../../stores/authStore';
 import { Role } from '../../types/enums';
 
 const TransactionsPage: React.FC = () => {
-  const { transactions, loading, error, validateTransaction } = useTransactionStore();
+  const { loading, error } = useTransactionStore();
   const { user } = useAuthStore();
 
   // Assuming there will be a fetchTransactions endpoint or similar
@@ -12,10 +12,10 @@ const TransactionsPage: React.FC = () => {
   //   fetchTransactions();
   // }, [fetchTransactions]);
 
-  const handleValidateTransaction = async (transactionId: string) => {
-    await validateTransaction(transactionId);
-    // Optionally refetch transactions or show a success message
-  };
+  // const handleValidateTransaction = async (transactionId: string) => {
+  //   await validateTransaction(transactionId);
+  //   // Optionally refetch transactions or show a success message
+  // };
 
   if (loading) return <p className="font-sans text-base-content">Chargement...</p>;
   if (error) return <p className="text-error font-sans">Erreur: {error}</p>;

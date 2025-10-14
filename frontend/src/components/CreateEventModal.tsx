@@ -30,7 +30,7 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<EventFormInputs>({
-    resolver: zodResolver(eventSchema) as any,
+    resolver: zodResolver(eventSchema),
   });
 
   const onSubmit = async (data: EventFormInputs) => {

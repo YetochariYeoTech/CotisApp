@@ -1,12 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useMemberStore } from '../../stores/memberStore';
-import { Role } from '../../types/enums';
-import { useAuthStore } from '../../stores/authStore';
 
 const MembersPage: React.FC = () => {
   const { members, loading, error, fetchMembers } = useMemberStore();
-  const { user } = useAuthStore();
 
   React.useEffect(() => {
     fetchMembers();

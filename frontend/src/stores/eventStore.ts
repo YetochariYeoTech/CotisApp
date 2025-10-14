@@ -30,8 +30,12 @@ export const useEventStore = create<EventState>((set) => ({
     try {
       const response = await api.get<Event[]>("/events"); // Assuming an endpoint to get all events
       set({ events: response.data, loading: false });
-    } catch (error: any) {
-      set({ error: error.message, loading: false });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        set({ error: error.message, loading: false });
+      } else {
+        set({ error: 'An unknown error occurred', loading: false });
+      }
     }
   },
 
@@ -46,8 +50,12 @@ export const useEventStore = create<EventState>((set) => ({
       await api.post("/events", { name, description, date, minimalAmount });
       set({ loading: false });
       // Optionally refetch events after creation
-    } catch (error: any) {
-      set({ error: error.message, loading: false });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        set({ error: error.message, loading: false });
+      } else {
+        set({ error: 'An unknown error occurred', loading: false });
+      }
     }
   },
 
@@ -61,8 +69,12 @@ export const useEventStore = create<EventState>((set) => ({
       await api.post(`/events/${eventId}/payments`, { memberId, amount });
       set({ loading: false });
       // Optionally refetch event details or transactions after contribution
-    } catch (error: any) {
-      set({ error: error.message, loading: false });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        set({ error: error.message, loading: false });
+      } else {
+        set({ error: 'An unknown error occurred', loading: false });
+      }
     }
   },
 }));

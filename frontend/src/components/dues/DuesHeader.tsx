@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { LuBell, LuUser, LuSearch } from 'react-icons/lu'; // Assuming react-icons is installed
+import { Link } from 'react-router-dom';
 
 interface DuesHeaderProps {
   onAddDue: () => void;
@@ -33,6 +34,10 @@ const DuesHeader: React.FC<DuesHeaderProps> = ({ onAddDue }) => {
             <span className="hidden sm:inline">+ Nouvelle Cotisation</span>
             <span className="sm:hidden">+</span>
           </button>
+          <Link to="/dues/summary" className="btn btn-secondary text-white rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 ease-in-out">
+            <span className="hidden sm:inline">Résumé des cotisations</span>
+            <span className="sm:hidden">Résumé</span>
+        </Link>
       </div>
     </div>
   );

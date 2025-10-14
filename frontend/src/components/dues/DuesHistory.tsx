@@ -1,6 +1,5 @@
-
-import React from 'react';
-import { LuDollarSign, LuCalendar } from 'react-icons/lu';
+import React from "react";
+import { LuDollarSign, LuCalendar } from "react-icons/lu";
 
 const DuesHistory = () => {
   const recentPayments = [
@@ -35,7 +34,9 @@ const DuesHistory = () => {
 
   return (
     <div className="p-6 bg-base-100 shadow-xl rounded-box">
-      <h2 className="text-2xl font-serif font-bold mb-4 text-base-content">Paiements Récents</h2>
+      <h2 className="text-2xl font-serif font-bold mb-4 text-base-content">
+        Paiements Récents
+      </h2>
       <ul className="menu bg-base-100 w-full rounded-box">
         {recentPayments.map((payment) => (
           <li key={payment.id}>
@@ -43,20 +44,31 @@ const DuesHistory = () => {
               <div className="flex items-center gap-3">
                 <div className="avatar">
                   <div className="mask mask-squircle w-10 h-10">
-                    <img src={payment.avatar} alt={`Avatar of ${payment.member}`} />
+                    <img
+                      src={payment.avatar}
+                      alt={`Avatar of ${payment.member}`}
+                    />
                   </div>
                 </div>
                 <div>
-                  <div className="font-bold text-base-content">{payment.member}</div>
+                  <div className="font-bold text-base-content">
+                    {payment.member}
+                  </div>
                   <div className="text-sm opacity-70 flex items-center gap-1">
-                    <LuDollarSign className="w-4 h-4" /> {payment.amount.toLocaleString()} XAF
+                    <LuDollarSign className="w-4 h-4" />{" "}
+                    {payment.amount.toLocaleString()} XAF
                   </div>
                 </div>
               </div>
               <div className="flex flex-col items-end">
-                <span className={`text-sm font-semibold ${payment.statusColor}`}>{payment.status}</span>
+                <span
+                  className={`text-sm font-semibold ${payment.statusColor}`}
+                >
+                  {payment.status}
+                </span>
                 <span className="text-xs opacity-50 flex items-center gap-1">
-                  <LuCalendar className="w-3 h-3" /> {new Date(payment.date).toLocaleDateString()}
+                  <LuCalendar className="w-3 h-3" />{" "}
+                  {new Date(payment.date).toLocaleDateString()}
                 </span>
               </div>
             </a>
@@ -64,7 +76,9 @@ const DuesHistory = () => {
         ))}
       </ul>
       <div className="mt-4 text-center">
-        <button className="btn btn-link text-primary">Voir tout l'historique</button>
+        <button className="btn btn-link text-primary">
+          Voir tout l'historique
+        </button>
       </div>
     </div>
   );

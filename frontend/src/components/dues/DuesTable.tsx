@@ -1,7 +1,10 @@
+
 import React from 'react';
-import { LuEye, LuPencil } from 'react-icons/lu';
+import { LuEye, LuPencil, LuSearch } from 'react-icons/lu';
 
 const DuesTable = () => {
+  const [searchTerm, setSearchTerm] = React.useState('');
+
   const duesData = [
     {
       id: 1,
@@ -45,6 +48,10 @@ const DuesTable = () => {
     },
   ];
 
+  const filteredDues = duesData.filter(due =>
+    due.member.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "PAID":
@@ -61,6 +68,18 @@ const DuesTable = () => {
   return (
     <div className="p-6">
       <h2 className="text-2xl font-serif font-bold mb-4 text-base-content">Liste Détaillée des Cotisations</h2>
+      <div className="mb-4 flex items-center gap-2">
+        <label className="input input-bordered flex items-center gap-2 flex-grow">
+          <input
+            type="text"
+            className="grow"
+            placeholder="Rechercher par membre..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <LuSearch className="h-4 w-4 opacity-70" />
+        </label>
+      </div>
       <div className="overflow-x-auto bg-base-100 rounded-box shadow-xl">
         <table className="table w-full">
           <thead>
@@ -73,7 +92,7 @@ const DuesTable = () => {
             </tr>
           </thead>
           <tbody>
-            {duesData.map((due) => (
+            {filteredDues.map((due) => (
               <tr key={due.id} className="hover:bg-base-200 transition-colors duration-200">
                 <td>
                   <div className="flex items-center gap-3">

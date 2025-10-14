@@ -24,8 +24,12 @@ export const useDuesStore = create<DuesState>((set) => ({
       // const response = await api.get<Dues[]>('/dues');
       // set({ dues: response.data, loading: false });
       set({ loading: false }); // Placeholder
-    } catch (error: any) {
-      set({ error: error.message, loading: false });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        set({ error: error.message, loading: false });
+      } else {
+        set({ error: 'An unknown error occurred', loading: false });
+      }
     }
   },
 
@@ -35,8 +39,12 @@ export const useDuesStore = create<DuesState>((set) => ({
       await api.post("/dues/generate");
       set({ loading: false });
       // Optionally refetch dues after generation
-    } catch (error: any) {
-      set({ error: error.message, loading: false });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        set({ error: error.message, loading: false });
+      } else {
+        set({ error: 'An unknown error occurred', loading: false });
+      }
     }
   },
 
@@ -46,8 +54,12 @@ export const useDuesStore = create<DuesState>((set) => ({
       await api.post("/dues/payments/dues", { memberId, duesId, amount });
       set({ loading: false });
       // Optionally refetch dues after payment
-    } catch (error: any) {
-      set({ error: error.message, loading: false });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        set({ error: error.message, loading: false });
+      } else {
+        set({ error: 'An unknown error occurred', loading: false });
+      }
     }
   },
 }));
