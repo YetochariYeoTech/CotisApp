@@ -2,6 +2,11 @@ import { Request, Response } from 'express';
 import { Transaction } from '../entity/Transaction';
 import { TransactionStatus } from '../types/enums';
 
+/**
+ * @description Validate a transaction
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ */
 export const validateTransaction = async (req: Request, res: Response) => {
   const transactionId = req.params.id;
 

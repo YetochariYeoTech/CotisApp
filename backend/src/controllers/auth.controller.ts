@@ -6,6 +6,11 @@ import { config } from "../config";
 import { startSession } from "mongoose";
 import { PaymentType } from "../types/enums";
 
+/**
+ * @description Register a new member
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ */
 export const register = async (req: Request, res: Response) => {
   const { email, password, fullName, phoneNumber } = req.body;
 
@@ -37,6 +42,11 @@ export const register = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * @description Login a member
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ */
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 

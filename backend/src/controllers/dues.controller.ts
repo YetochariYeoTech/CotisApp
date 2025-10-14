@@ -1,25 +1,35 @@
-import { Request, Response } from 'express';
-import { duesService } from '../services/dues.service';
-import { Transaction } from '../entity/Transaction';
-import { Dues } from '../entity/Dues';
-import { PaymentType, DuesStatus } from '../types/enums';
+import { Request, Response } from "express";
+import { duesService } from "../services/dues.service";
+import { Transaction } from "../entity/Transaction";
+import { Dues } from "../entity/Dues";
+import { PaymentType, DuesStatus } from "../types/enums";
 
+/**
+ * @description Generate dues for all members
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ */
 export const generateDues = async (req: Request, res: Response) => {
   try {
     await duesService.generateDues();
-    res.status(200).send('Dues generated successfully');
+    res.status(200).send("Dues generated successfully");
   } catch (error) {
     res.status(500).send(error);
   }
 };
 
+/**
+ * @description Pay dues for a member
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ */
 export const payDues = async (req: Request, res: Response) => {
   const { memberId, duesId, amount } = req.body;
 
   try {
     const dues = await Dues.findById(duesId);
     if (!dues) {
-      return res.status(404).send('Dues not found');
+      return res.status(404).send("Dues not found");
     }
 
     const transaction = new Transaction({
@@ -44,6 +54,11 @@ export const payDues = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * @description Get total dues by member
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ */
 export const getTotalDuesByMember = async (req: Request, res: Response) => {
   try {
     const result = await Dues.aggregate([

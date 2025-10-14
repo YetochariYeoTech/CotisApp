@@ -1,6 +1,11 @@
 import { Request, Response } from 'express';
 import { Transaction } from '../entity/Transaction';
 
+/**
+ * @description Get financial summary
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ */
 export const getFinancialSummary = async (req: Request, res: Response) => {
   const { startDate, endDate } = req.query;
 

@@ -3,6 +3,11 @@ import { Event } from '../entity/Event';
 import { Transaction } from '../entity/Transaction';
 import { PaymentType } from '../types/enums';
 
+/**
+ * @description Create a new event
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ */
 export const createEvent = async (req: Request, res: Response) => {
   const { name, description, date, minimalAmount } = req.body;
 
@@ -15,6 +20,11 @@ export const createEvent = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * @description Contribute to an event
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ */
 export const contributeToEvent = async (req: Request, res: Response) => {
   const { memberId, amount } = req.body;
   const eventId = req.params.id;
