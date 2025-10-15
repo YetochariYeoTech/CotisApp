@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { LuSearch } from 'react-icons/lu';
+import { LuSearch, LuRefreshCw } from 'react-icons/lu';
 import type { MemberDue } from '../../types/dues';
 import { DuesStatus, AccountStatus } from '../../types/enums';
 import { useDuesStore } from '../../stores/duesStore';
@@ -8,11 +8,12 @@ import { useAuthStore } from '../../stores/authStore';
 interface DuesTableProps {
   memberDues: MemberDue[];
   loading: boolean;
+  onRefresh: () => void;
 }
 
 type FilterStatus = 'all' | 'paid' | 'unpaid' | 'partially_paid';
 
-const DuesTable: React.FC<DuesTableProps> = ({ memberDues, loading }) => {
+const DuesTable: React.FC<DuesTableProps> = ({ memberDues, loading, onRefresh }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<FilterStatus>('all');
   const [currentPage, setCurrentPage] = useState(1);
@@ -79,9 +80,8 @@ const DuesTable: React.FC<DuesTableProps> = ({ memberDues, loading }) => {
     }
   };
 
-  if (loading) {
-    return <div className="flex justify-center items-center p-10"><span className="loading loading-lg loading-spinner text-primary"></span></div>;
-  }
+  // Do not show loading spinner here, as the parent shows a page-level one.
+  // The spinning icon on the refresh button will indicate loading.
 
   return (
     <div className="p-6 bg-base-100 shadow-xl rounded-box">
@@ -96,30 +96,15 @@ const DuesTable: React.FC<DuesTableProps> = ({ memberDues, loading }) => {
           />
           <LuSearch className="h-4 w-4 opacity-70" />
         </label>
-        <div className="join">
-          <button 
-            className={`join-item btn btn-sm ${filterStatus === 'all' ? 'btn-active' : ''}`}
-            onClick={() => setFilterStatus('all')}
-          >
-            Tous
-          </button>
-          <button 
-            className={`join-item btn btn-sm ${filterStatus === 'paid' ? 'btn-active' : ''}`}
-            onClick={() => setFilterStatus('paid')}
-          >
-            Payés
-          </button>
-          <button 
-            className={`join-item btn btn-sm ${filterStatus === 'partially_paid' ? 'btn-active' : ''}`}
-            onClick={() => setFilterStatus('partially_paid')}
-          >
-            Progressifs
-          </button>
-          <button 
-            className={`join-item btn btn-sm ${filterStatus === 'unpaid' ? 'btn-active' : ''}`}
-            onClick={() => setFilterStatus('unpaid')}
-          >
-            Non Payés
+        <div className="flex items-center gap-2">
+          <div className="join">
+            <button className={`join-item btn btn-sm ${filterStatus === 'all' ? 'btn-active' : ''}`} onClick={() => setFilterStatus('all')}>Tous</button>
+            <button className={`join-item btn btn-sm ${filterStatus === 'paid' ? 'btn-active' : ''}`} onClick={() => setFilterStatus('paid')}>Payés</button>
+            <button className={`join-item btn btn-sm ${filterStatus === 'partially_paid' ? 'btn-active' : ''}`} onClick={() => setFilterStatus('partially_paid')}>Progressifs</button>
+            <button className={`join-item btn btn-sm ${filterStatus === 'unpaid' ? 'btn-active' : ''}`} onClick={() => setFilterStatus('unpaid')}>Non Payés</button>
+          </div>
+          <button className="btn btn-ghost btn-sm btn-circle" onClick={onRefresh} disabled={loading} title="Rafraîchir les données">
+            <LuRefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           </button>
         </div>
       </div>

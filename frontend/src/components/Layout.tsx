@@ -5,7 +5,7 @@ import { navItems } from '../config/navigation';
 import ThemeToggle from './ThemeToggle';
 import { useThemeStore } from '../stores/themeStore';
 import { AccountStatus } from '../types/enums';
-import { LuCreditCard } from 'react-icons/lu';
+import { LuCreditCard, LuUser } from 'react-icons/lu';
 
 const Layout: React.FC = () => {
   const navigate = useNavigate();
@@ -43,18 +43,6 @@ const Layout: React.FC = () => {
     }
   };
 
-  const renderCenterNavLinks = () => {
-    if (isAuthenticated && isAccountActive) {
-      return filteredNavItems.map(item => (
-        <li key={item.name}>
-          <Link to={item.path}>{getNavItemName(item.name)}</Link>
-        </li>
-      ));
-    }
-    // For logged-out or inactive users, the center is empty
-    return null;
-  };
-
   return (
     <div className="flex flex-col min-h-screen bg-base-200">
       <header className="navbar bg-base-100 shadow-md sticky top-0 z-30" data-theme={theme}>
@@ -65,17 +53,20 @@ const Layout: React.FC = () => {
             </div>
             <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-64 text-lg" onClick={() => (document.activeElement as HTMLElement)?.blur()}>
               <li><Link to="/">Accueil</Link></li>
-              {isAuthenticated && isAccountActive && filteredNavItems.map(item => (
-                <li key={item.name}><Link to={item.path}>{getNavItemName(item.name)}</Link></li>
-              ))}
-              {isAuthenticated && !isAccountActive && <li><Link to="/profile">Profil</Link></li>}
-              {!isAuthenticated && (
+              {isAuthenticated ? (
+                <>
+                  <li><Link to="/profile">Profil</Link></li>
+                  {isAccountActive && filteredNavItems.map(item => (
+                    <li key={item.name}><Link to={item.path}>{getNavItemName(item.name)}</Link></li>
+                  ))}
+                  <li><button onClick={handleLogout}>Se déconnecter</button></li>
+                </>
+              ) : (
                 <>
                   <li><Link to="/login">Se connecter</Link></li>
                   <li><Link to="/register">S'inscrire</Link></li>
                 </>
               )}
-              {isAuthenticated && <li><button onClick={handleLogout}>Se déconnecter</button></li>}
             </ul>
           </div>
           <Link to={isAuthenticated ? "/dashboard" : "/"} className="btn btn-ghost text-xl font-serif">CotisApp</Link>
@@ -83,12 +74,15 @@ const Layout: React.FC = () => {
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
             <li><Link to="/">Accueil</Link></li>
-            {renderCenterNavLinks()}
+            {isAuthenticated && isAccountActive && filteredNavItems.map(item => (
+              <li key={item.name}>
+                <Link to={item.path}>{getNavItemName(item.name)}</Link>
+              </li>
+            ))}
           </ul>
         </div>
         <div className="navbar-end gap-2">
-          {/* Buttons for authenticated users */}
-          {isAuthenticated && (
+          {isAuthenticated ? (
             <>
               {!isAccountActive && (
                 <button className="btn btn-warning btn-sm animate-pulse" onClick={handleActivation}>
@@ -96,18 +90,22 @@ const Layout: React.FC = () => {
                   Activer le compte
                 </button>
               )}
+              <Link to="/profile" className="btn btn-ghost">
+                <div className="avatar mr-2">
+                  <div className="w-6 rounded-full">
+                    <img src={`https://i.pravatar.cc/40?u=${user?._id}`} alt="Avatar" />
+                  </div>
+                </div>
+                <span className="hidden md:inline">{user?.fullName}</span>
+              </Link>
               <button onClick={handleLogout} className="btn btn-ghost hidden lg:flex">Se déconnecter</button>
             </>
-          )}
-
-          {/* Buttons for unauthenticated users */}
-          {!isAuthenticated && (
+          ) : (
             <div className="hidden lg:flex items-center gap-2">
               <Link to="/login" className="btn btn-ghost btn-sm">Se connecter</Link>
               <Link to="/register" className="btn btn-primary btn-sm">S'inscrire</Link>
             </div>
           )}
-          
           <ThemeToggle />
         </div>
       </header>

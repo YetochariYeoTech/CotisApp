@@ -12,6 +12,7 @@ import TransactionsPage from './pages/Transactions/TransactionsPage';
 import FinancialSummaryPage from './pages/Reports/FinancialSummaryPage';
 import LandingPage from './pages/LandingPage';
 import NotFoundPage from './pages/NotFoundPage';
+import ProfilePage from './pages/ProfilePage'; // Import the new page
 import ProtectedRoute from './components/ProtectedRoute';
 import { useAuthStore } from './stores/authStore';
 
@@ -40,8 +41,7 @@ function App() {
             <Route path="/transactions" element={<TransactionsPage />} />
             <Route path="/reports" element={<FinancialSummaryPage />} />
             <Route path="/dues" element={<DuesPage />} />
-            {/* Add a placeholder /profile route */}
-            <Route path="/profile" element={<div>Page de profil à créer</div>} />
+            <Route path="/profile" element={<ProfilePage />} />
           </Route>
 
           {/* Catch-all 404 Route */}

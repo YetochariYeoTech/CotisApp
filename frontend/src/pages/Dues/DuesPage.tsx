@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import DuesHeader from '../../components/dues/DuesHeader';
 import DuesTable from '../../components/dues/DuesTable';
 import CreateDueModal from '../../components/dues/CreateDueModal';
 import { useDuesStore } from '../../stores/duesStore';
 import { useAuthStore } from '../../stores/authStore';
-
-// TODO: Refactor DuesSummary, DuesStatistics, and DuesHistory to work with the new data model
+import { Role } from '../../types/enums';
 import DuesSummary from '../../components/dues/DuesSummary';
 import DuesStatistics from '../../components/dues/DuesStatistics';
 import DuesHistory from '../../components/dues/DuesHistory';
@@ -15,17 +14,24 @@ const DuesPage: React.FC = () => {
   const { memberDues, loading, fetchMemberDues } = useDuesStore();
   const { user } = useAuthStore();
 
-  useEffect(() => {
-    // Assuming the user object has the member's ID as _id
-    // In a real app, you might need to fetch member details separately if the user is not the member
+  const handleRefresh = useCallback(() => {
     if (user?._id) {
       fetchMemberDues(user._id);
     }
   }, [user, fetchMemberDues]);
 
+  useEffect(() => {
+    handleRefresh();
+  }, [handleRefresh]);
+
+  const canCreateDues = user?.role === Role.ADMIN || user?.role === Role.TREASURER;
+
   return (
     <div className="min-h-screen bg-base-200 p-4 md:p-6 lg:p-8">
-      <DuesHeader onAddDue={() => setShowCreateDueModal(true)} />
+      <DuesHeader 
+        onAddDue={() => setShowCreateDueModal(true)} 
+        showAddButton={canCreateDues} 
+      />
       
       <div className="mb-6">
         <DuesSummary />
@@ -33,7 +39,11 @@ const DuesPage: React.FC = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
         <div className="lg:col-span-2">
-          <DuesTable memberDues={memberDues} loading={loading} />
+          <DuesTable 
+            memberDues={memberDues} 
+            loading={loading} 
+            onRefresh={handleRefresh} 
+          />
         </div>
         <div>
           <DuesStatistics />

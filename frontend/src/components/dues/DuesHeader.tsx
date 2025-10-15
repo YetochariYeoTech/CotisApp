@@ -1,13 +1,13 @@
-
 import React from 'react';
-import { LuBell, LuUser, LuSearch, LuArrowLeft } from 'react-icons/lu'; // Assuming react-icons is installed
+import { LuBell, LuUser, LuSearch, LuArrowLeft } from 'react-icons/lu';
 import { Link } from 'react-router-dom';
 
 interface DuesHeaderProps {
   onAddDue: () => void;
+  showAddButton: boolean;
 }
 
-const DuesHeader: React.FC<DuesHeaderProps> = ({ onAddDue }) => {
+const DuesHeader: React.FC<DuesHeaderProps> = ({ onAddDue, showAddButton }) => {
   return (
     <div className="flex flex-col md:flex-row justify-between items-center p-6 bg-base-100 shadow-md rounded-box">
       <div className="flex items-center gap-4 mb-4 md:mb-0">
@@ -30,14 +30,15 @@ const DuesHeader: React.FC<DuesHeaderProps> = ({ onAddDue }) => {
         <button className="btn btn-ghost btn-circle">
           <LuUser className="h-5 w-5" />
         </button>
-        <button
-            className="btn btn-accent text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out"
-            onClick={onAddDue}
-          >
-            <span className="hidden sm:inline">+ Nouvelle Cotisation</span>
-            <span className="sm:hidden">+</span>
-          </button>
-          
+        {showAddButton && (
+          <button
+              className="btn btn-accent text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out"
+              onClick={onAddDue}
+            >
+              <span className="hidden sm:inline">+ Nouvelle Cotisation</span>
+              <span className="sm:hidden">+</span>
+            </button>
+        )}
       </div>
     </div>
   );
