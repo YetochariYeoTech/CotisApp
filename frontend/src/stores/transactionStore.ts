@@ -6,26 +6,23 @@ interface TransactionState {
   transactions: Transaction[];
   loading: boolean;
   error: string | null;
-  fetchTransactions: () => Promise<void>;
+  fetchTransactions: (memberId?: string) => Promise<void>;
   validateTransaction: (id: string) => Promise<void>;
 }
 
-export const useTransactionStore = create<TransactionState>((set) => ({
+export const useTransactionStore = create<TransactionState>((set, get) => ({
   transactions: [],
   loading: false,
   error: null,
 
-  fetchTransactions: async () => {
+  fetchTransactions: async (memberId?: string) => {
     set({ loading: true, error: null });
     try {
-      const response = await api.get<Transaction[]>("/transactions"); // Assuming this endpoint will be added to backend
+      const url = memberId ? `/transactions/member/${memberId}` : '/transactions';
+      const response = await api.get<Transaction[]>(url);
       set({ transactions: response.data, loading: false });
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        set({ error: error.message, loading: false });
-      } else {
-        set({ error: 'An unknown error occurred', loading: false });
-      }
+    } catch (error: any) {
+      set({ error: error.response?.data?.message || error.message, loading: false });
     }
   },
 
@@ -33,14 +30,10 @@ export const useTransactionStore = create<TransactionState>((set) => ({
     set({ loading: true, error: null });
     try {
       await api.put(`/transactions/${id}/validate`);
-      set({ loading: false });
-      // Optionally refetch transactions after validation
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        set({ error: error.message, loading: false });
-      } else {
-        set({ error: 'An unknown error occurred', loading: false });
-      }
+      // Refetch all transactions to show the updated status
+      await get().fetchTransactions();
+    } catch (error: any) {
+      set({ error: error.response?.data?.message || error.message, loading: false });
     }
   },
 }));

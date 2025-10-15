@@ -4,7 +4,7 @@ import cookieParser from "cookie-parser"; // Added
 import { errorHandler } from "./middleware/error.middleware";
 import memberRoutes from "./routes/member.routes";
 import authRoutes from "./routes/auth.routes";
-import duesRoutes from "./routes/dues.routes";
+import dueRoutes from "./routes/due.routes";
 import eventRoutes from "./routes/event.routes";
 import transactionRoutes from "./routes/transaction.routes";
 import reportRoutes from "./routes/report.routes";
@@ -25,7 +25,7 @@ app.use(cookieParser()); // Added
 
 app.use("/api/members", memberRoutes);
 app.use("/api/auth", authRoutes);
-app.use("/api/dues", duesRoutes);
+app.use("/api/dues", dueRoutes);
 app.use("/api/events", eventRoutes);
 app.use("/api/transactions", transactionRoutes);
 app.use("/api/reports", reportRoutes);

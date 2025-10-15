@@ -8,7 +8,7 @@ import DashboardPage from './pages/Dashboard/DashboardPage';
 import MembersPage from './pages/Members/MembersPage';
 import MemberDetailsPage from './pages/Members/MemberDetailsPage';
 import DuesPage from './pages/Dues/DuesPage';
-import DuesSummaryPage from './pages/Dues/DuesSummaryPage';
+
 import EventsPage from './pages/Events/EventsPage';
 import TransactionsPage from './pages/Transactions/TransactionsPage';
 import FinancialSummaryPage from './pages/Reports/FinancialSummaryPage';
@@ -60,7 +60,7 @@ function App() {
             </Route>
             {/* Route for /dues */}
             <Route path="dues" element={<DuesPage />} />
-            <Route path="dues/summary" element={<DuesSummaryPage />} />
+            
           </Route>
         </Route>
 

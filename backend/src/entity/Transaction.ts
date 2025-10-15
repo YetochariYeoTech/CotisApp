@@ -1,10 +1,10 @@
-import { Schema, model, Types } from 'mongoose';
-import { PaymentType, TransactionStatus } from '../types/enums';
+import { Schema, model, Types } from "mongoose";
+import { PaymentType, TransactionStatus } from "../types/enums";
 
 const transactionSchema = new Schema({
   member: {
     type: Schema.Types.ObjectId,
-    ref: 'Member',
+    ref: "Member",
     required: true,
   },
   amount: {
@@ -25,14 +25,14 @@ const transactionSchema = new Schema({
     type: Date,
     default: Date.now,
   },
-  dues: {
+  memberDueId: {
     type: Schema.Types.ObjectId,
-    ref: 'Dues',
+    ref: "MemberDue",
   },
   event: {
     type: Schema.Types.ObjectId,
-    ref: 'Event',
+    ref: "Event",
   },
 });
 
-export const Transaction = model('Transaction', transactionSchema);
+export const Transaction = model("Transaction", transactionSchema);

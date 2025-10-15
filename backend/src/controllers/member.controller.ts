@@ -1,9 +1,9 @@
-import { Request, Response } from 'express';
-import { IMember, Member } from '../entity/Member';
-import { Dues } from '../entity/Dues';
-import { ContributionStatus } from '../types/enums';
-import { IMemberPublic } from '../types/interfaces';
-import { Types } from 'mongoose';
+import { Request, Response } from "express";
+import { IMember, Member } from "../entity/Member";
+import { Due } from "../entity/Due";
+import { ContributionStatus } from "../types/enums";
+import { IMemberPublic } from "../types/interfaces";
+import { Types } from "mongoose";
 
 /**
  * @description Get all members
@@ -23,7 +23,7 @@ export const getMembers = async (req: Request, res: Response) => {
 export const getMemberById = async (req: Request, res: Response) => {
   const member = await Member.findById(req.params.id);
   if (!member) {
-    return res.status(404).send('Member not found');
+    return res.status(404).send("Member not found");
   }
   res.json(member);
 };
@@ -34,7 +34,9 @@ export const getMemberById = async (req: Request, res: Response) => {
  * @param {Response} res - Express response object
  */
 export const getMembersUpToDate = async (req: Request, res: Response) => {
-  const members = await Member.find({ contributionStatus: ContributionStatus.UP_TO_DATE });
+  const members = await Member.find({
+    contributionStatus: ContributionStatus.UP_TO_DATE,
+  });
 
   const publicMembers: IMemberPublic[] = members.map((member: IMember) => ({
     _id: (member as any)._id.toString(),
@@ -54,16 +56,16 @@ export const getMembersUpToDate = async (req: Request, res: Response) => {
  */
 export const getMemberDuesReport = async (req: Request, res: Response) => {
   const memberId = req.params.id;
-  const dues = await Dues.aggregate([
+  const dues = await Due.aggregate([
     {
       $match: { member: new Types.ObjectId(memberId) },
     },
     {
       $lookup: {
-        from: 'transactions',
-        localField: '_id',
-        foreignField: 'dues',
-        as: 'transactions',
+        from: "transactions",
+        localField: "_id",
+        foreignField: "dues",
+        as: "transactions",
       },
     },
   ]);

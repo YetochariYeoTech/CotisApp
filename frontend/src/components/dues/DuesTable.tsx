@@ -1,128 +1,149 @@
+import React, { useState, useEffect } from 'react';
+import { LuSearch } from 'react-icons/lu';
+import type { MemberDue } from '../../types/dues';
+import { DuesStatus } from '../../types/enums';
+import { useDuesStore } from '../../stores/duesStore';
 
-import React from 'react';
-import { LuEye, LuPencil, LuSearch } from 'react-icons/lu';
+interface DuesTableProps {
+  memberDues: MemberDue[];
+  loading: boolean;
+}
 
-const DuesTable = () => {
-  const [searchTerm, setSearchTerm] = React.useState('');
+const DuesTable: React.FC<DuesTableProps> = ({ memberDues, loading }) => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
-  const duesData = [
-    {
-      id: 1,
-      member: "John Doe",
-      amount: 10000,
-      dueDate: "2025-01-31",
-      status: "PAID",
-      avatar: "https://i.pravatar.cc/40?img=1",
-    },
-    {
-      id: 2,
-      member: "Jane Smith",
-      amount: 10000,
-      dueDate: "2025-01-31",
-      status: "OVERDUE",
-      avatar: "https://i.pravatar.cc/40?img=2",
-    },
-    {
-      id: 3,
-      member: "Mike Johnson",
-      amount: 10000,
-      dueDate: "2025-01-31",
-      status: "PENDING",
-      avatar: "https://i.pravatar.cc/40?img=3",
-    },
-    {
-      id: 4,
-      member: "Alice Brown",
-      amount: 10000,
-      dueDate: "2025-02-28",
-      status: "PAID",
-      avatar: "https://i.pravatar.cc/40?img=4",
-    },
-    {
-      id: 5,
-      member: "Bob White",
-      amount: 10000,
-      dueDate: "2025-02-28",
-      status: "PENDING",
-      avatar: "https://i.pravatar.cc/40?img=5",
-    },
-  ];
+  const { payDue } = useDuesStore();
 
-  const filteredDues = duesData.filter(due =>
-    due.member.toLowerCase().includes(searchTerm.toLowerCase())
+  const handlePay = async (memberDue: MemberDue) => {
+    const amountString = prompt(`Montant à payer pour ${memberDue.dueId.label} (Restant: ${memberDue.dueId.expectedAmount - memberDue.paidAmount} XAF)`);
+    if (amountString) {
+      const amount = parseFloat(amountString);
+      if (!isNaN(amount) && amount > 0) {
+        await payDue({ 
+          memberDueId: memberDue._id, 
+          amount, 
+          memberId: memberDue.memberId 
+        });
+      } else {
+        alert("Veuillez entrer un montant valide.");
+      }
+    }
+  };
+
+  const filteredDues = memberDues.filter(due =>
+    due.dueId.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    due.memberId.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const getStatusBadge = (status: string) => {
+  // Reset to page 1 whenever the search term changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
+  // Pagination logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentDues = filteredDues.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredDues.length / itemsPerPage);
+
+  const getStatusBadge = (status: DuesStatus) => {
     switch (status) {
-      case "PAID":
+      case DuesStatus.PAID:
         return <div className="badge badge-success gap-2">Payé</div>;
-      case "OVERDUE":
-        return <div className="badge badge-error gap-2">En Retard</div>;
-      case "PENDING":
-        return <div className="badge badge-warning gap-2">En Attente</div>;
+      case DuesStatus.PARTIALLY_PAID:
+        return <div className="badge badge-info gap-2">Partiellement Payé</div>;
+      case DuesStatus.UNPAID:
+        return <div className="badge badge-warning gap-2">Non Payé</div>;
       default:
         return <div className="badge badge-neutral gap-2">Inconnu</div>;
     }
   };
 
+  if (loading) {
+    return <div className="flex justify-center items-center p-10"><span className="loading loading-lg loading-spinner text-primary"></span></div>;
+  }
+
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-serif font-bold mb-4 text-base-content">Liste Détaillée des Cotisations</h2>
+    <div className="p-6 bg-base-100 shadow-xl rounded-box">
       <div className="mb-4 flex items-center gap-2">
         <label className="input input-bordered flex items-center gap-2 flex-grow">
           <input
             type="text"
             className="grow"
-            placeholder="Rechercher par membre..."
+            placeholder="Rechercher par label ou ID membre..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           <LuSearch className="h-4 w-4 opacity-70" />
         </label>
       </div>
-      <div className="overflow-x-auto bg-base-100 rounded-box shadow-xl">
+      <div className="overflow-x-auto">
         <table className="table w-full">
           <thead>
             <tr>
-              <th>Membre</th>
-              <th>Montant</th>
-              <th>Date limite</th>
+              <th>Label de la Cotisation</th>
+              <th>Montant Attendu</th>
+              <th>Montant Payé</th>
+              <th>Solde Restant</th>
+              <th>Date Limite</th>
               <th>Statut</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {filteredDues.map((due) => (
-              <tr key={due.id} className="hover:bg-base-200 transition-colors duration-200">
-                <td>
-                  <div className="flex items-center gap-3">
-                    <div className="avatar">
-                      <div className="mask mask-squircle w-12 h-12">
-                        <img src={due.avatar} alt={`Avatar of ${due.member}`} />
-                      </div>
-                    </div>
+            {currentDues.map((due) => {
+              const balance = due.dueId.expectedAmount - due.paidAmount;
+              return (
+                <tr key={due._id} className="hover">
+                  <td>
                     <div>
-                      <div className="font-bold">{due.member}</div>
-                      <div className="text-sm opacity-50">ID: {due.id}</div>
+                      <div className="font-bold">{due.dueId.label}</div>
+                      <div className="text-sm opacity-50">Période: {due.dueId.period}</div>
                     </div>
-                  </div>
-                </td>
-                <td>{due.amount.toLocaleString()} XAF</td>
-                <td>{new Date(due.dueDate).toLocaleDateString()}</td>
-                <td>{getStatusBadge(due.status)}</td>
-                <th>
-                  <button className="btn btn-ghost btn-xs tooltip tooltip-bottom" data-tip="Voir détails">
-                    <LuEye className="h-4 w-4" />
-                  </button>
-                  <button className="btn btn-ghost btn-xs tooltip tooltip-bottom" data-tip="Modifier">
-                    <LuPencil className="h-4 w-4" />
-                  </button>
-                </th>
-              </tr>
-            ))}
+                  </td>
+                  <td>{due.dueId.expectedAmount.toLocaleString()} XAF</td>
+                  <td className="text-success">{due.paidAmount.toLocaleString()} XAF</td>
+                  <td className={`font-semibold ${balance > 0 ? 'text-error' : 'text-success'}`}>{balance.toLocaleString()} XAF</td>
+                  <td>{new Date(due.dueId.dueDate).toLocaleDateString()}</td>
+                  <td>{getStatusBadge(due.status)}</td>
+                  <th>
+                    <button 
+                      className="btn btn-primary btn-xs"
+                      onClick={() => handlePay(due)}
+                      disabled={due.status === DuesStatus.PAID}
+                    >
+                      Payer
+                    </button>
+                  </th>
+                </tr>
+              )
+            })}
           </tbody>
         </table>
       </div>
+      {totalPages > 1 && (
+        <div className="pt-4 flex justify-center">
+          <div className="join">
+            <button 
+              className="join-item btn"
+              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+            >
+              «
+            </button>
+            <button className="join-item btn">Page {currentPage} sur {totalPages}</button>
+            <button 
+              className="join-item btn"
+              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+              disabled={currentPage === totalPages}
+            >
+              »
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -12,7 +12,7 @@ export const checkJwt = (req: Request, res: Response, next: NextFunction) => {
 
   try {
     jwtPayload = <any>jwt.verify(token, config.jwtSecret);
-    res.locals.jwtPayload = jwtPayload;
+    req.user = jwtPayload;
   } catch (error) {
     return res.status(401).send({ message: "Invalid or expired token" });
   }

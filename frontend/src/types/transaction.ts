@@ -7,6 +7,6 @@ export interface Transaction {
   type: PaymentType;
   status: TransactionStatus;
   date: string;
-  dues?: string;
+  memberDueId?: string;
   event?: string;
 }

@@ -1,19 +1,34 @@
-import { DuesStatus } from '../types/enums';
+import { DuesStatus } from './enums';
 
-export interface Dues {
+// Represents the abstract Due object
+export interface Due {
   _id: string;
-  member: string;
+  label: string;
   period: string;
   expectedAmount: number;
-  paidAmount: number;
   dueDate: string;
+}
+
+// Represents a member's specific obligation for a due, this is what the frontend will primarily use
+export interface MemberDue {
+  _id: string;
+  dueId: Due; // Populated from the backend
+  memberId: string;
+  paidAmount: number;
   status: DuesStatus;
 }
 
-export interface DuesReportItem {
+// Type for the form when creating a new Due for all members
+export interface CreateDuePayload {
+  label: string;
   period: string;
   expectedAmount: number;
-  paidAmount: number;
   dueDate: string;
-  status: DuesStatus;
+}
+
+// Type for the payload when making a payment
+export interface PayDuePayload {
+  memberDueId: string;
+  amount: number;
+  memberId: string;
 }

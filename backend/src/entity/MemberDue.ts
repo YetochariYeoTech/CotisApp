@@ -1,27 +1,20 @@
 import { Schema, model } from 'mongoose';
 import { DuesStatus } from '../types/enums';
 
-const duesSchema = new Schema({
-  member: {
+const memberDueSchema = new Schema({
+  dueId: {
+    type: Schema.Types.ObjectId,
+    ref: 'Due',
+    required: true,
+  },
+  memberId: {
     type: Schema.Types.ObjectId,
     ref: 'Member',
-    required: true,
-  },
-  period: {
-    type: String,
-    required: true,
-  },
-  expectedAmount: {
-    type: Number,
     required: true,
   },
   paidAmount: {
     type: Number,
     default: 0,
-  },
-  dueDate: {
-    type: Date,
-    required: true,
   },
   status: {
     type: String,
@@ -30,4 +23,4 @@ const duesSchema = new Schema({
   },
 });
 
-export const Dues = model('Dues', duesSchema);
+export const MemberDue = model('MemberDue', memberDueSchema);

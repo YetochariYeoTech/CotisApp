@@ -1,65 +1,61 @@
 import { create } from "zustand";
 import api from "../api/axios";
-import type { Dues } from "../types/dues";
+import type { MemberDue, CreateDuePayload, PayDuePayload } from "../types/dues";
+
+import { useAuthStore } from "./authStore";
 
 interface DuesState {
-  dues: Dues[];
+  memberDues: MemberDue[];
   loading: boolean;
   error: string | null;
-  fetchDues: () => Promise<void>;
-  generateDues: () => Promise<void>;
-  payDues: (memberId: string, duesId: string, amount: number) => Promise<void>;
+  fetchMemberDues: (memberId: string) => Promise<void>;
+  createDue: (payload: CreateDuePayload) => Promise<void>;
+  payDue: (payload: PayDuePayload) => Promise<void>;
 }
 
-export const useDuesStore = create<DuesState>((set) => ({
-  dues: [],
+export const useDuesStore = create<DuesState>((set, get) => ({
+  memberDues: [],
   loading: false,
   error: null,
 
-  fetchDues: async () => {
-    // This endpoint is not defined in the backend, assuming it will be added or we fetch member specific dues
+  fetchMemberDues: async (memberId: string) => {
     set({ loading: true, error: null });
     try {
-      // Example: Fetching all dues (if such an endpoint existed)
-      // const response = await api.get<Dues[]>('/dues');
-      // set({ dues: response.data, loading: false });
-      set({ loading: false }); // Placeholder
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        set({ error: error.message, loading: false });
-      } else {
-        set({ error: 'An unknown error occurred', loading: false });
-      }
+      const response = await api.get<MemberDue[]>(`/dues/member/${memberId}`);
+      set({ memberDues: response.data, loading: false });
+    } catch (error: any) {
+      set({ error: error.response?.data?.message || error.message, loading: false });
     }
   },
 
-  generateDues: async () => {
+  createDue: async (payload: CreateDuePayload) => {
     set({ loading: true, error: null });
     try {
-      await api.post("/dues/generate");
-      set({ loading: false });
-      // Optionally refetch dues after generation
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        set({ error: error.message, loading: false });
-      } else {
-        set({ error: 'An unknown error occurred', loading: false });
+      await api.post("/dues", payload);
+
+      // After creating a due, refetch the dues for the current user to update the UI
+      const memberId = useAuthStore.getState().user?._id;
+      if (memberId) {
+        await get().fetchMemberDues(memberId);
       }
+      
+    } catch (error: any) {
+      set({ error: error.response?.data?.message || error.message, loading: false });
+    } finally {
+      set({ loading: false });
     }
   },
 
-  payDues: async (memberId: string, duesId: string, amount: number) => {
+  payDue: async (payload: PayDuePayload) => {
     set({ loading: true, error: null });
     try {
-      await api.post("/dues/payments/dues", { memberId, duesId, amount });
+      await api.post("/dues/pay", payload);
+      // After payment, refetch the dues for the specific member to update the UI
+      await get().fetchMemberDues(payload.memberId);
+    } catch (error: any) {
+      set({ error: error.response?.data?.message || error.message, loading: false });
+    } finally {
       set({ loading: false });
-      // Optionally refetch dues after payment
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        set({ error: error.message, loading: false });
-      } else {
-        set({ error: 'An unknown error occurred', loading: false });
-      }
     }
   },
 }));
