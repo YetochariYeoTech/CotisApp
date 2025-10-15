@@ -4,7 +4,7 @@ import { Transaction } from "../entity/Transaction";
 import * as jwt from "jsonwebtoken";
 import { config } from "../config";
 import { startSession } from "mongoose";
-import { PaymentType } from "../types/enums";
+import { PaymentType, AccountStatus } from "../types/enums";
 
 /**
  * @description Register a new member
@@ -76,4 +76,54 @@ export const login = async (req: Request, res: Response) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { password: _password, ...memberData } = member.toObject();
   res.send({ member: memberData });
+};
+
+/**
+ * @description Activate a member's account by paying the activation fee
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ */
+export const activateAccount = async (req: Request, res: Response) => {
+  const { userId } = req.user; // From checkJwt middleware
+  const { amount } = req.body;
+
+  if (Number(amount) !== Number(config.activationFee)) {
+    return res.status(400).send({ message: `Activation fee of ${config.activationFee} is required.` });
+  }
+
+  const session = await startSession();
+  session.startTransaction();
+
+  try {
+    const member = await Member.findById(userId).session(session);
+    if (!member) {
+      throw new Error("Member not found.");
+    }
+
+    if (member.accountStatus === AccountStatus.ACTIVE) {
+      throw new Error("Account is already active.");
+    }
+
+    // 1. Create the activation transaction
+    const transaction = new Transaction({
+      member: member._id,
+      amount: Number(amount),
+      type: PaymentType.ACTIVATION,
+    });
+    await transaction.save({ session });
+
+    // 2. Update member status
+    member.accountStatus = AccountStatus.ACTIVE;
+    await member.save({ session });
+
+    await session.commitTransaction();
+    res.status(200).send({ message: "Account activated successfully.", member });
+
+  } catch (error: any) {
+    await session.abortTransaction();
+    res.status(500).send({ message: "Account activation failed.", error: error.message });
+
+  } finally {
+    session.endSession();
+  }
 };

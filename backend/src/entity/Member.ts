@@ -44,7 +44,7 @@ const memberSchema = new Schema<IMember>({
   accountStatus: {
     type: String,
     enum: Object.values(AccountStatus),
-    default: AccountStatus.UNACTIVATED,
+    default: AccountStatus.INACTIVE,
   },
   password: {
     type: String,

@@ -9,6 +9,7 @@ export enum PaymentType {
   ADHESION = 'ADHESION',
   DUES = 'DUES',
   EVENT = 'EVENT',
+  ACTIVATION = 'ACTIVATION',
 }
 
 export enum TransactionStatus {
@@ -30,6 +31,6 @@ export enum ContributionStatus {
 }
 
 export enum AccountStatus {
-  ACTIVATED = 'ACTIVATED',
-  UNACTIVATED = 'UNACTIVATED',
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
 }

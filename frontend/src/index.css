@@ -9,3 +9,51 @@ html {
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Outfit', serif;
 }
+
+/* New Smooth Neon Effect Styles */
+.text-neon {
+  /* Using HSL colors with DaisyUI theme variables for primary color */
+  --neon-color: hsl(var(--p)); 
+  color: #fff;
+  text-shadow:
+    0 0 7px #fff,
+    0 0 10px #fff,
+    0 0 21px #fff,
+    0 0 42px var(--neon-color),
+    0 0 82px var(--neon-color),
+    0 0 92px var(--neon-color);
+}
+
+.text-neon-title {
+    font-size: 8rem; 
+    font-weight: bold;
+    animation: pulse-glow 4s ease-in-out infinite alternate;
+}
+
+.text-neon-subtitle {
+    font-size: 2rem;
+    font-weight: bold;
+    animation: pulse-glow 4s ease-in-out 0.5s infinite alternate;
+}
+
+/* Smooth Pulse/Glow Animation */
+@keyframes pulse-glow {
+  from {
+    text-shadow:
+      0 0 5px #fff,
+      0 0 10px #fff,
+      0 0 15px #fff,
+      0 0 20px var(--neon-color),
+      0 0 35px var(--neon-color),
+      0 0 40px var(--neon-color);
+  }
+  to {
+    text-shadow:
+      0 0 10px #fff,
+      0 0 20px #fff,
+      0 0 30px #fff,
+      0 0 40px var(--neon-color),
+      0 0 70px var(--neon-color),
+      0 0 80px var(--neon-color);
+  }
+}

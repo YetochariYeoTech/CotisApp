@@ -1,7 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useAuthStore } from '../stores/authStore';
 
 const LandingPage: React.FC = () => {
+  const { isAuthenticated } = useAuthStore();
+  const ctaPath = isAuthenticated ? '/dashboard' : '/register';
+  const ctaText = isAuthenticated ? 'Aller au tableau de bord' : 'Commencer';
+
   return (
     <div className="min-h-screen bg-base-200 text-base-content">
       {/* Hero Section */}
@@ -10,7 +15,7 @@ const LandingPage: React.FC = () => {
           <div className="max-w-md">
             <h1 className="text-5xl font-bold font-serif mb-4">Gérez vos cotisations sans effort</h1>
             <p className="mb-5 text-lg font-sans">Simplifiez la gestion des membres, des cotisations et des événements avec CotisApp.</p>
-            <Link to="/register" className="btn btn-accent btn-lg font-sans">Commencer</Link>
+            <Link to={ctaPath} className="btn btn-accent btn-lg font-sans">{ctaText}</Link>
           </div>
         </div>
       </section>
@@ -73,7 +78,7 @@ const LandingPage: React.FC = () => {
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-4xl font-bold font-serif mb-4">Prêt à simplifier votre gestion ?</h2>
           <p className="text-lg mb-8 font-sans">Rejoignez des centaines d'organisations qui font confiance à CotisApp.</p>
-          <Link to="/register" className="btn btn-accent btn-lg font-sans">Commencer</Link>
+          <Link to={ctaPath} className="btn btn-accent btn-lg font-sans">{ctaText}</Link>
         </div>
       </section>
     </div>

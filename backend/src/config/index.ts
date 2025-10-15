@@ -5,4 +5,5 @@ export const config = {
   db: {
     uri: process.env.MONGODB_URI || 'mongodb://localhost:27017/cotis-app',
   },
+  activationFee: process.env.ACTIVATION_FEE || 5000,
 };

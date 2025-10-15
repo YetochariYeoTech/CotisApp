@@ -1,7 +1,7 @@
-import React, { useMemo } from 'react';
-import { LuTrendingUp, LuTrendingDown, LuHourglass } from 'react-icons/lu';
-import { useDuesStore } from '../../stores/duesStore';
-import { DuesStatus } from '../../types/enums';
+import React, { useMemo } from "react";
+import { LuTrendingUp, LuTrendingDown, LuHourglass } from "react-icons/lu";
+import { useDuesStore } from "../../stores/duesStore";
+import { DuesStatus } from "../../types/enums";
 
 const DuesStatistics: React.FC = () => {
   const { memberDues } = useDuesStore();
@@ -16,49 +16,63 @@ const DuesStatistics: React.FC = () => {
       };
     }
 
-    const statusCounts = memberDues.reduce(
-      (acc, due) => {
-        acc[due.status] = (acc[due.status] || 0) + 1;
-        return acc;
-      },
-      {} as Record<DuesStatus, number>
-    );
+    const statusCounts = memberDues.reduce((acc, due) => {
+      acc[due.status] = (acc[due.status] || 0) + 1;
+      return acc;
+    }, {} as Record<DuesStatus, number>);
 
-    const paidPercentage = Math.round(((statusCounts[DuesStatus.PAID] || 0) / totalDues) * 100);
-    const partiallyPaidPercentage = Math.round(((statusCounts[DuesStatus.PARTIALLY_PAID] || 0) / totalDues) * 100);
-    const unpaidPercentage = Math.round(((statusCounts[DuesStatus.UNPAID] || 0) / totalDues) * 100);
+    const paidPercentage = Math.round(
+      ((statusCounts[DuesStatus.PAID] || 0) / totalDues) * 100
+    );
+    const partiallyPaidPercentage = Math.round(
+      ((statusCounts[DuesStatus.PARTIALLY_PAID] || 0) / totalDues) * 100
+    );
+    const unpaidPercentage = Math.round(
+      ((statusCounts[DuesStatus.UNPAID] || 0) / totalDues) * 100
+    );
 
     return { paidPercentage, partiallyPaidPercentage, unpaidPercentage };
   }, [memberDues]);
 
   return (
-    <div className="p-6 bg-base-100 shadow-xl rounded-box mb-6">
-      <h2 className="text-xl font-bold mb-4 text-base-content">
-        Statistiques des Cotisations
-      </h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="stat place-items-center">
-          <div className="stat-figure text-success">
-            <LuTrendingUp className="text-3xl" />
+    <div className="bg-base-100 shadow-xl rounded-box mb-6">
+      <div className="p-6">
+        <h2 className="text-xl font-bold mb-4 text-base-content">
+          Statistiques des Cotisations
+        </h2>
+        <div className="space-y-4">
+          {/* Paid Card */}
+          <div className="flex items-center justify-between p-4 bg-base-200 rounded-lg">
+            <div>
+              <div className="font-semibold text-base-content/80">Payées</div>
+              <div className="text-2xl font-bold text-success">{stats.paidPercentage}%</div>
+            </div>
+            <div className="text-success">
+              <LuTrendingUp className="h-8 w-8" />
+            </div>
           </div>
-          <div className="stat-title font-semibold text-base-content/80">Payées</div>
-          <div className="stat-value text-success">{stats.paidPercentage}%</div>
-        </div>
 
-        <div className="stat place-items-center">
-          <div className="stat-figure text-info">
-            <LuHourglass className="text-3xl" />
+          {/* Partially Paid Card */}
+          <div className="flex items-center justify-between p-4 bg-base-200 rounded-lg">
+            <div>
+              <div className="font-semibold text-base-content/80">Progressifs</div>
+              <div className="text-2xl font-bold text-info">{stats.partiallyPaidPercentage}%</div>
+            </div>
+            <div className="text-info">
+              <LuHourglass className="h-8 w-8" />
+            </div>
           </div>
-          <div className="stat-title font-semibold text-base-content/80">Partielles</div>
-          <div className="stat-value text-info">{stats.partiallyPaidPercentage}%</div>
-        </div>
 
-        <div className="stat place-items-center">
-          <div className="stat-figure text-error">
-            <LuTrendingDown className="text-3xl" />
+          {/* Unpaid Card */}
+          <div className="flex items-center justify-between p-4 bg-base-200 rounded-lg">
+            <div>
+              <div className="font-semibold text-base-content/80">Non Payées</div>
+              <div className="text-2xl font-bold text-error">{stats.unpaidPercentage}%</div>
+            </div>
+            <div className="text-error">
+              <LuTrendingDown className="h-8 w-8" />
+            </div>
           </div>
-          <div className="stat-title font-semibold text-base-content/80">Non Payées</div>
-          <div className="stat-value text-error">{stats.unpaidPercentage}%</div>
         </div>
       </div>
     </div>
