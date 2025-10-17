@@ -10,12 +10,14 @@ interface DuesHeaderProps {
 const DuesHeader: React.FC<DuesHeaderProps> = ({ onAddDue, showAddButton }) => {
   return (
     <div className="flex flex-col md:flex-row justify-between items-center p-6 bg-base-100 shadow-md rounded-box">
-      <div className="flex items-center gap-4 mb-4 md:mb-0">
+      <div className="flex items-center gap-2 sm:gap-4 mb-4 md:mb-0">
         <Link to="/dashboard" className="btn btn-ghost btn-circle">
           <LuArrowLeft className="h-6 w-6" />
         </Link>
-        <h1 className="text-4xl font-serif font-bold text-primary animate-fade-in-down">Cotisations</h1>
-        <span className="badge badge-lg badge-outline badge-primary">Gestion</span>
+        <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+          <h1 className="text-2xl sm:text-4xl font-serif font-bold text-primary animate-fade-in-down truncate">Cotisations</h1>
+          <span className="badge badge-lg badge-outline badge-primary">Gestion</span>
+        </div>
       </div>
       <div className="flex items-center gap-4">
         <button className="btn btn-ghost btn-circle">
