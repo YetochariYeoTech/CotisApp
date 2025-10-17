@@ -1,7 +1,39 @@
 import { Request, Response } from "express";
 import { IMember, Member } from "../entity/Member";
 import { Due } from "../entity/Due";
-import { ContributionStatus } from "../types/enums";
+import { Transaction } from "../entity/Transaction";
+import { TransactionStatus } from "../types/enums";
+
+/**
+ * @description Get the current member's balance
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ */
+export const getMemberBalance = async (req: Request, res: Response) => {
+  const { userId } = req.user;
+
+  try {
+    const result = await Transaction.aggregate([
+      {
+        $match: {
+          member: new Types.ObjectId(userId),
+          status: TransactionStatus.VALIDATED,
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: "$amount" },
+        },
+      },
+    ]);
+
+    const balance = result.length > 0 ? result[0].total : 0;
+    res.json({ balance });
+  } catch (error) {
+    res.status(500).send({ message: "Error fetching member balance", error });
+  }
+};
 import { IMemberPublic } from "../types/interfaces";
 import { Types } from "mongoose";
 
