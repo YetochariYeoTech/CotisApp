@@ -63,7 +63,9 @@ export const login = async (req: Request, res: Response) => {
   const isPasswordMatch = await member.comparePassword(password);
 
   if (!isPasswordMatch) {
-    return res.status(401).send();
+    return res
+      .status(401)
+      .send("Informations de connexion incorrectes ou inexistant");
   }
 
   const token = jwt.sign(
@@ -88,7 +90,9 @@ export const activateAccount = async (req: Request, res: Response) => {
   const { amount } = req.body;
 
   if (Number(amount) !== Number(config.activationFee)) {
-    return res.status(400).send({ message: `Activation fee of ${config.activationFee} is required.` });
+    return res.status(400).send({
+      message: `Activation fee of ${config.activationFee} is required.`,
+    });
   }
 
   const session = await startSession();
@@ -117,12 +121,14 @@ export const activateAccount = async (req: Request, res: Response) => {
     await member.save({ session });
 
     await session.commitTransaction();
-    res.status(200).send({ message: "Account activated successfully.", member });
-
+    res
+      .status(200)
+      .send({ message: "Account activated successfully.", member });
   } catch (error: any) {
     await session.abortTransaction();
-    res.status(500).send({ message: "Account activation failed.", error: error.message });
-
+    res
+      .status(500)
+      .send({ message: "Account activation failed.", error: error.message });
   } finally {
     session.endSession();
   }
