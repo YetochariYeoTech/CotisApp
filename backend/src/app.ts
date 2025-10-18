@@ -9,6 +9,8 @@ import dueRoutes from "./routes/due.routes";
 import eventRoutes from "./routes/event.routes";
 import transactionRoutes from "./routes/transaction.routes";
 import reportRoutes from "./routes/report.routes";
+import walletRoutes from "./routes/wallet.routes";
+import webhookRoutes from "./routes/webhooks.routes";
 
 const app = express();
 
@@ -41,6 +43,8 @@ app.use("/api/dues", dueRoutes);
 app.use("/api/events", eventRoutes);
 app.use("/api/transactions", transactionRoutes);
 app.use("/api/reports", reportRoutes);
+app.use("/api/wallet", walletRoutes);
+app.use("/api/webhooks", webhookRoutes);
 
 app.get("/", (req, res) => {
   res.send("API is running...");

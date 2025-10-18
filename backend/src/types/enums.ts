@@ -34,3 +34,8 @@ export enum AccountStatus {
   ACTIVE = "ACTIVE",
   INACTIVE = "INACTIVE",
 }
+
+export enum PaymentProvider {
+  INTERNAL = "INTERNAL",
+  WAVE = "WAVE",
+}
