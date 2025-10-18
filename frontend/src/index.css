@@ -59,3 +59,44 @@ h1, h2, h3, h4, h5, h6 {
       0 0 80px var(--neon-color);
   }
 }
+
+.tab-button {
+  transition: all 0.3s ease;
+}
+
+.tab-button.active {
+  background: linear-gradient(135deg, #3b82f6, #60a5fa);
+  color: white;
+}
+
+[data-theme="dark"] .tab-button.active {
+  background: linear-gradient(135deg, #1e40af, #3b82f6);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #3b82f6, #60a5fa);
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
+}
+
+[data-theme="dark"] .btn-primary {
+  background: linear-gradient(135deg, #1e40af, #3b82f6);
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, #10b981, #34d399);
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
+}
+
+[data-theme="dark"] .btn-secondary {
+  background: linear-gradient(135deg, #065f46, #10b981);
+}
