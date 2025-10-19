@@ -1,81 +1,69 @@
-import React from 'react';
-import { useAuthStore } from '../stores/authStore';
-import { LuUser, LuMail, LuPhone, LuCalendar, LuShield, LuWallet, LuPencil, LuArrowDownToLine, LuArrowUpFromLine } from 'react-icons/lu';
+import React, { useState } from "react";
+import ProfileHeader from "../components/profile/ProfileHeader";
+import ProfileTabs from "../components/profile/ProfileTabs";
+import PersonalInfoTab from "../components/profile/PersonalInfoTab";
+import WalletTab from "../components/profile/WalletTab";
+import SecurityTab from "../components/profile/SecurityTab";
+import PreferencesTab from "../components/profile/PreferencesTab";
+import QuickActions from "../components/profile/QuickActions";
+import PasswordChangeModal from "../components/profile/PasswordChangeModal";
 
-const ProfilePage: React.FC = () => {
-  const { user } = useAuthStore();
+const ProfilePage = () => {
+  const [activeTab, setActiveTab] = useState("personal");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  if (!user) {
-    return <div className="p-6"><span className="loading loading-lg"></span></div>;
-  }
+  const switchTab = (tab: string) => {
+    setActiveTab(tab);
+  };
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
-    <div className="p-4 md:p-8 space-y-8">
-      {/* Page Header */}
-      <div className="flex items-center gap-4">
-        <div className="avatar">
-          <div className="w-16 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-            <img src={`https://i.pravatar.cc/150?u=${user._id}`} alt={`Avatar of ${user.fullName}`} />
-          </div>
-        </div>
-        <div>
-          <h1 className="text-3xl font-bold font-serif">Mon Profil</h1>
-          <p className="text-base-content/70">Gérez vos informations personnelles et votre compte.</p>
-        </div>
-      </div>
+    <div className="p-4 md:p-8 bg-base-100 min-h-screen">
+      <div className="max-w-7xl mx-auto">
+        <ProfileHeader />
+        <ProfileTabs activeTab={activeTab} switchTab={switchTab} />
 
-      {/* Personal Information Card */}
-      <div className="card bg-base-100 shadow-xl">
-        <div className="card-body">
-          <div className="flex justify-between items-center">
-            <h2 className="card-title">Informations Personnelles</h2>
-            <button className="btn btn-ghost btn-sm">
-              <LuPencil className="h-4 w-4" /> Modifier
-            </button>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div
+            className={`${
+              activeTab === "personal" ? "" : "hidden"
+            } lg:col-span-2`}
+          >
+            <PersonalInfoTab />
           </div>
-          <div className="divider my-2"></div>
-          <div className="space-y-4">
-            <div className="flex items-center gap-4">
-              <LuUser className="h-5 w-5 text-primary" />
-              <div className="font-sans"><strong>Nom complet :</strong> {user.fullName}</div>
-            </div>
-            <div className="flex items-center gap-4">
-              <LuMail className="h-5 w-5 text-primary" />
-              <div className="font-sans"><strong>Email :</strong> {user.email}</div>
-            </div>
-            <div className="flex items-center gap-4">
-              <LuShield className="h-5 w-5 text-primary" />
-              <div className="font-sans"><strong>Rôle :</strong> {user.role}</div>
-            </div>
-            <div className="flex items-center gap-4">
-              <LuCalendar className="h-5 w-5 text-primary" />
-              <div className="font-sans"><strong>Membre depuis :</strong> {new Date(user.joinDate).toLocaleDateString()}</div>
-            </div>
+          <div
+            className={`${
+              activeTab === "wallet" ? "" : "hidden"
+            } lg:col-span-2`}
+          >
+            <WalletTab />
           </div>
-        </div>
-      </div>
+          <div
+            className={`${
+              activeTab === "security" ? "" : "hidden"
+            } lg:col-span-2`}
+          >
+            <SecurityTab />
+          </div>
+          <div
+            className={`${
+              activeTab === "preferences" ? "" : "hidden"
+            } lg:col-span-2`}
+          >
+            <PreferencesTab />
+          </div>
 
-      {/* Wallet Card */}
-      <div className="card bg-base-100 shadow-xl">
-        <div className="card-body">
-          <h2 className="card-title">Mon Portefeuille</h2>
-          <div className="divider my-2"></div>
-          <div className="flex flex-col items-center justify-center p-8 text-center">
-            <LuWallet className="h-16 w-16 text-primary/50 mb-4" />
-            <p className="text-4xl font-bold">0 XAF</p>
-            <p className="text-base-content/60 mt-2">Solde disponible</p>
-          </div>
-          <div className="card-actions justify-center gap-2 border-t border-base-200 pt-4">
-            <button className="btn btn-primary" disabled>
-                <LuArrowDownToLine className="h-4 w-4" />
-                Faire un dépôt
-            </button>
-            <button className="btn btn-outline" disabled>
-                <LuArrowUpFromLine className="h-4 w-4" />
-                Faire un retrait
-            </button>
-          </div>
+          <QuickActions />
         </div>
+
+        <PasswordChangeModal isOpen={isModalOpen} onClose={closeModal} />
       </div>
     </div>
   );

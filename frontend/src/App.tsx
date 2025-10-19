@@ -13,6 +13,7 @@ import FinancialSummaryPage from './pages/Reports/FinancialSummaryPage';
 import LandingPage from './pages/LandingPage';
 import NotFoundPage from './pages/NotFoundPage';
 import ProfilePage from './pages/ProfilePage'; // Import the new page
+import WalletPage from './pages/WalletPage'; // Import the Wallet page
 import ProtectedRoute from './components/ProtectedRoute';
 import { useAuthStore } from './stores/authStore';
 
@@ -42,6 +43,7 @@ function App() {
             <Route path="/reports" element={<FinancialSummaryPage />} />
             <Route path="/dues" element={<DuesPage />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/wallet" element={<WalletPage />} />
           </Route>
 
           {/* Catch-all 404 Route */}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
+import { useWalletStore } from '../stores/walletStore';
 import { navItems } from '../config/navigation';
 import ThemeToggle from './ThemeToggle';
 import { useThemeStore } from '../stores/themeStore';
@@ -10,7 +11,14 @@ import { LuCreditCard, LuUser } from 'react-icons/lu';
 const Layout: React.FC = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated, logout, activateAccount } = useAuthStore();
+  const { balance, fetchBalance } = useWalletStore();
   const { theme } = useThemeStore();
+
+  React.useEffect(() => {
+    if (isAuthenticated) {
+      fetchBalance();
+    }
+  }, [isAuthenticated, fetchBalance]);
 
   const handleLogout = () => {
     logout();
@@ -69,7 +77,7 @@ const Layout: React.FC = () => {
               )}
             </ul>
           </div>
-          <Link to={isAuthenticated ? "/dashboard" : "/"} className="btn btn-ghost text-xl font-serif">CotisApp</Link>
+          <Link to="/" className="btn btn-ghost text-xl font-serif">CotisApp</Link>
         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
@@ -89,6 +97,11 @@ const Layout: React.FC = () => {
                   <LuCreditCard />
                   Activer le compte
                 </button>
+              )}
+              {isAccountActive && (
+                <div className="kbd kbd-sm">
+                  <span>{new Intl.NumberFormat('fr-FR').format(balance)} XOF</span>
+                </div>
               )}
               <Link to="/profile" className="btn btn-ghost">
                 <div className="avatar mr-2">
