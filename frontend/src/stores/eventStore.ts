@@ -4,9 +4,11 @@ import type { Event } from "../types/event";
 
 interface EventState {
   events: Event[];
+  totalPages: number;
+  currentPage: number;
   loading: boolean;
   error: string | null;
-  fetchEvents: () => Promise<void>;
+  fetchEvents: (page?: number, limit?: number) => Promise<void>;
   createEvent: (
     name: string,
     description: string,
@@ -22,14 +24,23 @@ interface EventState {
 
 export const useEventStore = create<EventState>((set) => ({
   events: [],
+  totalPages: 1,
+  currentPage: 1,
   loading: false,
   error: null,
 
-  fetchEvents: async () => {
+  fetchEvents: async (page = 1, limit = 10) => {
+    console.log("Fetching events with page:", page, "and limit:", limit);
     set({ loading: true, error: null });
     try {
-      const response = await api.get<Event[]>("/events"); // Assuming an endpoint to get all events
-      set({ events: response.data, loading: false });
+      const response = await api.get("/events", { params: { page, limit } });
+      console.log("Response from backend:", response.data);
+      set({ 
+        events: response.data.events, 
+        totalPages: response.data.totalPages,
+        currentPage: response.data.currentPage,
+        loading: false 
+      });
     } catch (error: unknown) {
       if (error instanceof Error) {
         set({ error: error.message, loading: false });
@@ -49,7 +60,7 @@ export const useEventStore = create<EventState>((set) => ({
     try {
       await api.post("/events", { name, description, date, minimalAmount });
       set({ loading: false });
-      // Optionally refetch events after creation
+      useEventStore.getState().fetchEvents();
     } catch (error: unknown) {
       if (error instanceof Error) {
         set({ error: error.message, loading: false });

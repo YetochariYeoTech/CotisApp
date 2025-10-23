@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { IMember, Member } from "../entity/Member";
 import { Due } from "../entity/Due";
 import { Transaction } from "../entity/Transaction";
-import { TransactionStatus } from "../types/enums";
+import { TransactionStatus, ContributionStatus } from "../types/enums";
 
 /**
  * @description Get the current member's balance

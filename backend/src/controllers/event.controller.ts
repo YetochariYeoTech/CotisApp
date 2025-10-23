@@ -1,7 +1,8 @@
-import { Request, Response } from 'express';
-import { Event } from '../entity/Event';
-import { Transaction } from '../entity/Transaction';
-import { PaymentType } from '../types/enums';
+import { Request, Response } from "express";
+import { Event } from "../entity/Event";
+import { Transaction } from "../entity/Transaction";
+import { PaymentType } from "../types/enums";
+import { getUserJoinDate } from "../utils/getUserJoinDate";
 
 /**
  * @description Create a new event
@@ -32,11 +33,13 @@ export const contributeToEvent = async (req: Request, res: Response) => {
   try {
     const event = await Event.findById(eventId);
     if (!event) {
-      return res.status(404).send('Event not found');
+      return res.status(404).send("Event not found");
     }
 
     if (amount < event.minimalAmount) {
-      return res.status(400).send(`Contribution amount must be at least ${event.minimalAmount}`);
+      return res
+        .status(400)
+        .send(`Contribution amount must be at least ${event.minimalAmount}`);
     }
 
     const transaction = new Transaction({
@@ -50,5 +53,41 @@ export const contributeToEvent = async (req: Request, res: Response) => {
     res.status(200).send({ transaction });
   } catch (error) {
     res.status(500).send(error);
+  }
+};
+
+export const getEvents = async (req: Request, res: Response) => {
+  const { page = 1, limit = 10 } = req.query;
+  const { userId } = req.user;
+
+  try {
+    const joinDate = await getUserJoinDate(userId);
+    if (!joinDate) {
+      return res
+        .status(404)
+        .send({ message: "User not found or join date is missing" });
+    }
+
+    console.log("Fetching events for user with join date:", joinDate);
+    const events = await Event.find({
+      date: { $gte: joinDate },
+    })
+      .limit(Number(limit))
+      .skip((Number(page) - 1) * Number(limit))
+      .sort({ date: -1 });
+
+    console.log("Events found in DB:", events);
+
+    const count = await Event.countDocuments({
+      date: { $gte: joinDate },
+    });
+
+    res.json({
+      events,
+      totalPages: Math.ceil(count / Number(limit)),
+      currentPage: Number(page),
+    });
+  } catch (error) {
+    res.status(500).send({ message: "Error fetching events", error });
   }
 };
