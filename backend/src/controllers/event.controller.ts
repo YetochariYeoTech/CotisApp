@@ -68,7 +68,6 @@ export const getEvents = async (req: Request, res: Response) => {
         .send({ message: "User not found or join date is missing" });
     }
 
-    console.log("Fetching events for user with join date:", joinDate);
     const events = await Event.find({
       date: { $gte: joinDate },
     })
