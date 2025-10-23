@@ -24,4 +24,12 @@ export default {
     themes: ["light", "dark"],
     darkTheme: "dark",
   },
+  safelist: [
+    'btn',
+    'btn-sm',
+    'btn-xs',
+    'btn-active',
+    'join',
+    'join-item',
+  ],
 };

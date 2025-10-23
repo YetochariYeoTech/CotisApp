@@ -45,7 +45,9 @@ const DuesStatistics: React.FC = () => {
           <div className="flex items-center justify-between p-4 bg-base-200 rounded-lg">
             <div>
               <div className="font-semibold text-base-content/80">Payées</div>
-              <div className="text-2xl font-bold text-success">{stats.paidPercentage}%</div>
+              <div className="text-2xl font-bold text-success">
+                {stats.paidPercentage}%
+              </div>
             </div>
             <div className="text-success">
               <LuTrendingUp className="h-8 w-8" />
@@ -55,8 +57,12 @@ const DuesStatistics: React.FC = () => {
           {/* Partially Paid Card */}
           <div className="flex items-center justify-between p-4 bg-base-200 rounded-lg">
             <div>
-              <div className="font-semibold text-base-content/80">Progressifs</div>
-              <div className="text-2xl font-bold text-info">{stats.partiallyPaidPercentage}%</div>
+              <div className="font-semibold text-base-content/80">
+                Progressifs
+              </div>
+              <div className="text-2xl font-bold text-info">
+                {stats.partiallyPaidPercentage}%
+              </div>
             </div>
             <div className="text-info">
               <LuHourglass className="h-8 w-8" />
@@ -66,8 +72,12 @@ const DuesStatistics: React.FC = () => {
           {/* Unpaid Card */}
           <div className="flex items-center justify-between p-4 bg-base-200 rounded-lg">
             <div>
-              <div className="font-semibold text-base-content/80">Non Payées</div>
-              <div className="text-2xl font-bold text-error">{stats.unpaidPercentage}%</div>
+              <div className="font-semibold text-base-content/80">
+                Non Payées
+              </div>
+              <div className="text-2xl font-bold text-error">
+                {stats.unpaidPercentage}%
+              </div>
             </div>
             <div className="text-error">
               <LuTrendingDown className="h-8 w-8" />

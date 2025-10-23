@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { LuSearch, LuRefreshCw } from 'react-icons/lu';
-import type { MemberDue } from '../../types/dues';
-import { DuesStatus, AccountStatus } from '../../types/enums';
-import { useDuesStore } from '../../stores/duesStore';
-import { useAuthStore } from '../../stores/authStore';
+import React, { useState, useEffect } from "react";
+import { LuSearch, LuRefreshCw } from "react-icons/lu";
+import type { MemberDue } from "../../types/dues";
+import { DuesStatus, AccountStatus } from "../../types/enums";
+import { useDuesStore } from "../../stores/duesStore";
+import { useAuthStore } from "../../stores/authStore";
 
 interface DuesTableProps {
   memberDues: MemberDue[];
@@ -11,11 +11,15 @@ interface DuesTableProps {
   onRefresh: () => void;
 }
 
-type FilterStatus = 'all' | 'paid' | 'unpaid' | 'partially_paid';
+type FilterStatus = "all" | "paid" | "unpaid" | "partially_paid";
 
-const DuesTable: React.FC<DuesTableProps> = ({ memberDues, loading, onRefresh }) => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterStatus, setFilterStatus] = useState<FilterStatus>('all');
+const DuesTable: React.FC<DuesTableProps> = ({
+  memberDues,
+  loading,
+  onRefresh,
+}) => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterStatus, setFilterStatus] = useState<FilterStatus>("all");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
@@ -26,17 +30,23 @@ const DuesTable: React.FC<DuesTableProps> = ({ memberDues, loading, onRefresh })
 
   const handlePay = async (memberDue: MemberDue) => {
     if (!isAccountActive) {
-      alert("Veuillez activer votre compte pour pouvoir payer les cotisations.");
+      alert(
+        "Veuillez activer votre compte pour pouvoir payer les cotisations."
+      );
       return;
     }
-    const amountString = prompt(`Montant à payer pour ${memberDue.dueId.label} (Restant: ${memberDue.dueId.expectedAmount - memberDue.paidAmount} XAF)`);
+    const amountString = prompt(
+      `Montant à payer pour ${memberDue.dueId.label} (Restant: ${
+        memberDue.dueId.expectedAmount - memberDue.paidAmount
+      } XAF)`
+    );
     if (amountString) {
       const amount = parseFloat(amountString);
       if (!isNaN(amount) && amount > 0) {
-        await payDue({ 
-          memberDueId: memberDue._id, 
-          amount, 
-          memberId: memberDue.memberId 
+        await payDue({
+          memberDueId: memberDue._id,
+          amount,
+          memberId: memberDue.memberId,
         });
       } else {
         alert("Veuillez entrer un montant valide.");
@@ -45,14 +55,16 @@ const DuesTable: React.FC<DuesTableProps> = ({ memberDues, loading, onRefresh })
   };
 
   const filteredDues = memberDues
-    .filter(due =>
-      due.dueId.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      due.memberId.toLowerCase().includes(searchTerm.toLowerCase())
+    .filter(
+      (due) =>
+        due.dueId.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        due.memberId.toLowerCase().includes(searchTerm.toLowerCase())
     )
-    .filter(due => {
-      if (filterStatus === 'paid') return due.status === DuesStatus.PAID;
-      if (filterStatus === 'unpaid') return due.status === DuesStatus.UNPAID;
-      if (filterStatus === 'partially_paid') return due.status === DuesStatus.PARTIALLY_PAID;
+    .filter((due) => {
+      if (filterStatus === "paid") return due.status === DuesStatus.PAID;
+      if (filterStatus === "unpaid") return due.status === DuesStatus.UNPAID;
+      if (filterStatus === "partially_paid")
+        return due.status === DuesStatus.PARTIALLY_PAID;
       return true; // 'all'
     });
 
@@ -80,6 +92,14 @@ const DuesTable: React.FC<DuesTableProps> = ({ memberDues, loading, onRefresh })
     }
   };
 
+  const getButtonClass = (status: FilterStatus) => {
+    let classes = 'join-item btn btn-sm';
+    if (status === filterStatus) {
+      classes += ' btn-active';
+    }
+    return classes;
+  };
+
   // Do not show loading spinner here, as the parent shows a page-level one.
   // The spinning icon on the refresh button will indicate loading.
 
@@ -97,14 +117,49 @@ const DuesTable: React.FC<DuesTableProps> = ({ memberDues, loading, onRefresh })
           <LuSearch className="h-4 w-4 opacity-70" />
         </label>
         <div className="flex items-center gap-2">
-          <div className="join">
-            <button className={`join-item btn btn-sm ${filterStatus === 'all' ? 'btn-active' : ''}`} onClick={() => setFilterStatus('all')}>Tous</button>
-            <button className={`join-item btn btn-sm ${filterStatus === 'paid' ? 'btn-active' : ''}`} onClick={() => setFilterStatus('paid')}>Payés</button>
-            <button className={`join-item btn btn-sm ${filterStatus === 'partially_paid' ? 'btn-active' : ''}`} onClick={() => setFilterStatus('partially_paid')}>Progressifs</button>
-            <button className={`join-item btn btn-sm ${filterStatus === 'unpaid' ? 'btn-active' : ''}`} onClick={() => setFilterStatus('unpaid')}>Non Payés</button>
+          <div className="filter-pill-container">
+            <button
+              className={`filter-pill ${
+                filterStatus === "all" ? "filter-pill-active" : ""
+              }`}
+              onClick={() => setFilterStatus("all")}
+            >
+              Tous
+            </button>
+            <button
+              className={`filter-pill ${
+                filterStatus === "paid" ? "filter-pill-active" : ""
+              }`}
+              onClick={() => setFilterStatus("paid")}
+            >
+              Payés
+            </button>
+            <button
+              className={`filter-pill ${
+                filterStatus === "partially_paid" ? "filter-pill-active" : ""
+              }`}
+              onClick={() => setFilterStatus("partially_paid")}
+            >
+              Progressifs
+            </button>
+            <button
+              className={`filter-pill ${
+                filterStatus === "unpaid" ? "filter-pill-active" : ""
+              }`}
+              onClick={() => setFilterStatus("unpaid")}
+            >
+              Non Payés
+            </button>
           </div>
-          <button className="btn btn-ghost btn-sm btn-circle" onClick={onRefresh} disabled={loading} title="Rafraîchir les données">
-            <LuRefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+          <button
+            className="btn btn-ghost btn-sm btn-circle"
+            onClick={onRefresh}
+            disabled={loading}
+            title="Rafraîchir les données"
+          >
+            <LuRefreshCw
+              className={`h-4 w-4 ${loading ? "animate-spin" : ""}`}
+            />
           </button>
         </div>
       </div>
@@ -129,26 +184,42 @@ const DuesTable: React.FC<DuesTableProps> = ({ memberDues, loading, onRefresh })
                   <td>
                     <div>
                       <div className="font-bold">{due.dueId.label}</div>
-                      <div className="text-sm opacity-50">Période: {due.dueId.period}</div>
+                      <div className="text-sm opacity-50">
+                        Période: {due.dueId.period}
+                      </div>
                     </div>
                   </td>
                   <td>{due.dueId.expectedAmount.toLocaleString()} XAF</td>
-                  <td className="text-success">{due.paidAmount.toLocaleString()} XAF</td>
-                  <td className={`font-semibold ${balance > 0 ? 'text-error' : 'text-success'}`}>{balance.toLocaleString()} XAF</td>
+                  <td className="text-success">
+                    {due.paidAmount.toLocaleString()} XAF
+                  </td>
+                  <td
+                    className={`font-semibold ${
+                      balance > 0 ? "text-error" : "text-success"
+                    }`}
+                  >
+                    {balance.toLocaleString()} XAF
+                  </td>
                   <td>{new Date(due.dueId.dueDate).toLocaleDateString()}</td>
                   <td>{getStatusBadge(due.status)}</td>
                   <th>
-                    <button 
+                    <button
                       className="btn btn-primary btn-xs"
                       onClick={() => handlePay(due)}
-                      disabled={due.status === DuesStatus.PAID || !isAccountActive}
-                      title={!isAccountActive ? "Veuillez activer votre compte pour payer" : "Effectuer un paiement"}
+                      disabled={
+                        due.status === DuesStatus.PAID || !isAccountActive
+                      }
+                      title={
+                        !isAccountActive
+                          ? "Veuillez activer votre compte pour payer"
+                          : "Effectuer un paiement"
+                      }
                     >
                       Payer
                     </button>
                   </th>
                 </tr>
-              )
+              );
             })}
           </tbody>
         </table>
@@ -156,17 +227,21 @@ const DuesTable: React.FC<DuesTableProps> = ({ memberDues, loading, onRefresh })
       {totalPages > 1 && (
         <div className="pt-4 flex justify-center">
           <div className="join">
-            <button 
+            <button
               className="join-item btn"
-              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
             >
               «
             </button>
-            <button className="join-item btn">Page {currentPage} sur {totalPages}</button>
-            <button 
+            <button className="join-item btn">
+              Page {currentPage} sur {totalPages}
+            </button>
+            <button
               className="join-item btn"
-              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
               disabled={currentPage === totalPages}
             >
               »

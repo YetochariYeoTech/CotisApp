@@ -1,12 +1,13 @@
-import { Schema, model, Document, Model } from 'mongoose';
-import bcrypt from 'bcryptjs';
-import { Role, ContributionStatus, AccountStatus } from '../types/enums';
+import { Schema, model, Document, Model } from "mongoose";
+import bcrypt from "bcryptjs";
+import { Role, ContributionStatus, AccountStatus } from "../types/enums";
 
 export interface IMember extends Document {
   email: string;
   fullName: string;
   phoneNumber: string;
   role: Role;
+  wallet: Number;
   contributionStatus: ContributionStatus;
   accountStatus: AccountStatus;
   password: string;
@@ -36,6 +37,10 @@ const memberSchema = new Schema<IMember>({
     enum: Object.values(Role),
     default: Role.MEMBER,
   },
+  wallet: {
+    type: Number,
+    default: 0,
+  },
   contributionStatus: {
     type: String,
     enum: Object.values(ContributionStatus),
@@ -58,8 +63,8 @@ const memberSchema = new Schema<IMember>({
   },
 });
 
-memberSchema.pre<IMember>('save', async function (next) {
-  if (!this.isModified('password')) {
+memberSchema.pre<IMember>("save", async function (next) {
+  if (!this.isModified("password")) {
     return next();
   }
   this.password = await bcrypt.hash(this.password, 10);
@@ -70,4 +75,4 @@ memberSchema.methods.comparePassword = function (candidatePassword: string) {
   return bcrypt.compare(candidatePassword, this.password);
 };
 
-export const Member: Model<IMember> = model<IMember>('Member', memberSchema);
+export const Member: Model<IMember> = model<IMember>("Member", memberSchema);

@@ -1,15 +1,15 @@
-import { Schema, model } from 'mongoose';
-import { DuesStatus } from '../types/enums';
+import { Schema, model } from "mongoose";
+import { DuesStatus } from "../types/enums";
 
 const memberDueSchema = new Schema({
   dueId: {
     type: Schema.Types.ObjectId,
-    ref: 'Due',
+    ref: "Due",
     required: true,
   },
   memberId: {
     type: Schema.Types.ObjectId,
-    ref: 'Member',
+    ref: "Member",
     required: true,
   },
   paidAmount: {
@@ -23,4 +23,4 @@ const memberDueSchema = new Schema({
   },
 });
 
-export const MemberDue = model('MemberDue', memberDueSchema);
+export const MemberDue = model("MemberDue", memberDueSchema);

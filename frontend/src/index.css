@@ -100,3 +100,35 @@ h1, h2, h3, h4, h5, h6 {
 [data-theme="dark"] .btn-secondary {
   background: linear-gradient(135deg, #065f46, #10b981);
 }
+
+.filter-btn {
+  @apply btn btn-sm;
+}
+
+.filter-btn-active {
+  @apply btn-active;
+}
+
+.filter-pill-container {
+  display: flex;
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 9999px;
+  padding: 0.25rem;
+}
+
+.filter-pill {
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  color: hsl(var(--bc, 0 0 45%));
+}
+
+.filter-pill-active {
+  background-color: hsl(var(--b1, 0 0 100%));
+  color: hsl(var(--pc, 0 0 0%));
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}

@@ -1,5 +1,5 @@
-import { Request, Response } from 'express';
-import { Transaction } from '../entity/Transaction';
+import { Request, Response } from "express";
+import { Transaction } from "../entity/Transaction";
 
 /**
  * @description Get financial summary
@@ -22,7 +22,7 @@ export const getFinancialSummary = async (req: Request, res: Response) => {
       {
         $group: {
           _id: null,
-          totalAmount: { $sum: '$amount' },
+          totalAmount: { $sum: "$amount" },
           count: { $sum: 1 },
         },
       },
