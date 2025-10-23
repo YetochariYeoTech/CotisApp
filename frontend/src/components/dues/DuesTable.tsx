@@ -204,7 +204,9 @@ const DuesTable: React.FC<DuesTableProps> = ({
                   <td>{getStatusBadge(due.status)}</td>
                   <th>
                     <button
-                      className="btn btn-primary btn-xs"
+                      className={`btn btn-primary btn-xs ${
+                        due.status === DuesStatus.PAID || !isAccountActive ? 'line-through' : ''
+                      }`}
                       onClick={() => handlePay(due)}
                       disabled={
                         due.status === DuesStatus.PAID || !isAccountActive
