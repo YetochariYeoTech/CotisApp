@@ -92,13 +92,13 @@ const DuesTable: React.FC<DuesTableProps> = ({
     }
   };
 
-  const getButtonClass = (status: FilterStatus) => {
-    let classes = 'join-item btn btn-sm';
-    if (status === filterStatus) {
-      classes += ' btn-active';
-    }
-    return classes;
-  };
+  // const getButtonClass = (status: FilterStatus) => {
+  //   let classes = 'join-item btn btn-sm';
+  //   if (status === filterStatus) {
+  //     classes += ' btn-active';
+  //   }
+  //   return classes;
+  // };
 
   // Do not show loading spinner here, as the parent shows a page-level one.
   // The spinning icon on the refresh button will indicate loading.
@@ -205,7 +205,9 @@ const DuesTable: React.FC<DuesTableProps> = ({
                   <th>
                     <button
                       className={`btn btn-primary btn-xs ${
-                        due.status === DuesStatus.PAID || !isAccountActive ? 'line-through' : ''
+                        due.status === DuesStatus.PAID || !isAccountActive
+                          ? "line-through"
+                          : ""
                       }`}
                       onClick={() => handlePay(due)}
                       disabled={
