@@ -42,6 +42,17 @@ export const contributeToEvent = async (req: Request, res: Response) => {
         .send(`Contribution amount must be at least ${event.minimalAmount}`);
     }
 
+    // Check for existing contribution from this member to this event
+    const existingContribution = await Transaction.findOne({
+      event: eventId,
+      member: memberId,
+      type: PaymentType.EVENT,
+    });
+
+    if (existingContribution) {
+      return res.status(409).send("User has already contributed to this event.");
+    }
+
     const transaction = new Transaction({
       member: memberId,
       amount,

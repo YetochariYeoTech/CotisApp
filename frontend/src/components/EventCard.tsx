@@ -4,7 +4,7 @@ import { LuCalendar, LuDollarSign, LuHeart } from 'react-icons/lu';
 
 interface EventCardProps {
   event: Event;
-  onContribute: (eventId: string, amount: number) => void;
+  onContribute: (event: Event) => void; // Changed to accept the full event object
 }
 
 const EventCard: React.FC<EventCardProps> = ({ event, onContribute }) => {
@@ -24,7 +24,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, onContribute }) => {
         <div className="card-actions justify-end mt-4">
           <button
             className="btn btn-success font-sans"
-            onClick={() => onContribute(event._id, event.minimalAmount)}
+            onClick={() => onContribute(event)} // Changed to pass the full event object
           >
             <LuHeart className="mr-2" />
             Contribuer

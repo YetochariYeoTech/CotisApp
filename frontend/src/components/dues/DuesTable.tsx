@@ -4,6 +4,7 @@ import type { MemberDue } from "../../types/dues";
 import { DuesStatus, AccountStatus } from "../../types/enums";
 import { useDuesStore } from "../../stores/duesStore";
 import { useAuthStore } from "../../stores/authStore";
+import { useToastStore } from "../../stores/toastStore"; // Import useToastStore
 
 interface DuesTableProps {
   memberDues: MemberDue[];
@@ -25,14 +26,13 @@ const DuesTable: React.FC<DuesTableProps> = ({
 
   const { payDue } = useDuesStore();
   const { user } = useAuthStore();
+  const { showToast } = useToastStore(); // Get showToast from the store
 
   const isAccountActive = user?.accountStatus === AccountStatus.ACTIVE;
 
   const handlePay = async (memberDue: MemberDue) => {
     if (!isAccountActive) {
-      alert(
-        "Veuillez activer votre compte pour pouvoir payer les cotisations."
-      );
+      showToast("Veuillez activer votre compte pour pouvoir payer les cotisations.", "error"); // Use toast instead of alert
       return;
     }
     const amountString = prompt(
@@ -43,13 +43,19 @@ const DuesTable: React.FC<DuesTableProps> = ({
     if (amountString) {
       const amount = parseFloat(amountString);
       if (!isNaN(amount) && amount > 0) {
-        await payDue({
-          memberDueId: memberDue._id,
-          amount,
-          memberId: memberDue.memberId,
-        });
+        try {
+          await payDue({
+            memberDueId: memberDue._id,
+            amount,
+            memberId: memberDue.memberId,
+          });
+          showToast("Paiement de cotisation effectué avec succès !", "success"); // Show success toast
+          onRefresh(); // Refresh dues after successful payment
+        } catch (err: any) {
+          showToast(err.response?.data || "Erreur lors du paiement de la cotisation.", "error"); // Show error toast
+        }
       } else {
-        alert("Veuillez entrer un montant valide.");
+        showToast("Veuillez entrer un montant valide.", "error"); // Use toast instead of alert
       }
     }
   };

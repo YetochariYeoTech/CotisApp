@@ -7,12 +7,15 @@ import ThemeToggle from './ThemeToggle';
 import { useThemeStore } from '../stores/themeStore';
 import { AccountStatus } from '../types/enums';
 import { LuCreditCard, LuUser } from 'react-icons/lu';
+import Toast from './common/Toast'; // Import Toast component
+import { useToastStore } from '../stores/toastStore'; // Import useToastStore
 
 const Layout: React.FC = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated, logout, activateAccount } = useAuthStore();
   const { balance, fetchBalance } = useWalletStore();
   const { theme } = useThemeStore();
+  const { message: toastMessage, type: toastType, hideToast } = useToastStore(); // Get toast state
 
   React.useEffect(() => {
     if (isAuthenticated) {
@@ -130,6 +133,12 @@ const Layout: React.FC = () => {
           <p>Copyright © 2025 - Tous droits réservés par CotisApp</p>
         </aside>
       </footer>
+    {/* Toast Notification */}
+      {toastMessage && toastType && (
+        <div className="toast toast-end toast-bottom">
+          <Toast message={toastMessage} type={toastType} onDismiss={hideToast} />
+        </div>
+      )}
     </div>
   );
 };

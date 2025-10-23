@@ -4,7 +4,7 @@ import { LuHeart } from 'react-icons/lu';
 
 interface EventsTableProps {
   events: Event[];
-  onContribute: (eventId: string, amount: number) => void;
+  onContribute: (event: Event) => void; // Changed to accept the full event object
 }
 
 const EventsTable: React.FC<EventsTableProps> = ({ events, onContribute }) => {
@@ -37,9 +37,7 @@ const EventsTable: React.FC<EventsTableProps> = ({ events, onContribute }) => {
                 <button
                   className="btn btn-sm btn-success font-sans tooltip"
                   data-tip="Contribuer à cet événement"
-                  onClick={() =>
-                    onContribute(event._id, event.minimalAmount)
-                  }
+                  onClick={() => onContribute(event)} // Changed to pass the full event object
                 >
                   <span className="flex items-center">
                     <LuHeart className="mr-2" />
