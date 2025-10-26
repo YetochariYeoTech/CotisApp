@@ -4,7 +4,8 @@ import type { MemberDue } from "../../types/dues";
 import { DuesStatus, AccountStatus } from "../../types/enums";
 import { useDuesStore } from "../../stores/duesStore";
 import { useAuthStore } from "../../stores/authStore";
-import { useToastStore } from "../../stores/toastStore"; // Import useToastStore
+import { useToastStore } from "../../stores/toastStore";
+import PayDueModal from "./PayDueModal"; // Import the new PayDueModal
 
 interface DuesTableProps {
   memberDues: MemberDue[];
@@ -26,37 +27,29 @@ const DuesTable: React.FC<DuesTableProps> = ({
 
   const { payDue } = useDuesStore();
   const { user } = useAuthStore();
-  const { showToast } = useToastStore(); // Get showToast from the store
+  const { showToast } = useToastStore();
+
+  const [isPayDueModalOpen, setIsPayDueModalOpen] = useState(false); // State for PayDueModal
+  const [selectedMemberDue, setSelectedMemberDue] = useState<MemberDue | null>(null); // State to hold memberDue for payment
 
   const isAccountActive = user?.accountStatus === AccountStatus.ACTIVE;
 
-  const handlePay = async (memberDue: MemberDue) => {
+  const handlePayClick = (memberDue: MemberDue) => { // Renamed from handlePay
     if (!isAccountActive) {
-      showToast("Veuillez activer votre compte pour pouvoir payer les cotisations.", "error"); // Use toast instead of alert
+      showToast("Veuillez activer votre compte pour pouvoir payer les cotisations.", "error");
       return;
     }
-    const amountString = prompt(
-      `Montant à payer pour ${memberDue.dueId.label} (Restant: ${
-        memberDue.dueId.expectedAmount - memberDue.paidAmount
-      } XAF)`
-    );
-    if (amountString) {
-      const amount = parseFloat(amountString);
-      if (!isNaN(amount) && amount > 0) {
-        try {
-          await payDue({
-            memberDueId: memberDue._id,
-            amount,
-            memberId: memberDue.memberId,
-          });
-          showToast("Paiement de cotisation effectué avec succès !", "success"); // Show success toast
-          onRefresh(); // Refresh dues after successful payment
-        } catch (err: any) {
-          showToast(err.response?.data || "Erreur lors du paiement de la cotisation.", "error"); // Show error toast
-        }
-      } else {
-        showToast("Veuillez entrer un montant valide.", "error"); // Use toast instead of alert
-      }
+    setSelectedMemberDue(memberDue);
+    setIsPayDueModalOpen(true);
+  };
+
+  const handlePaySubmit = async (payload: { memberDueId: string; amount: number; memberId: string }) => {
+    try {
+      await payDue(payload);
+      showToast("Paiement de cotisation effectué avec succès !", "success");
+      onRefresh(); // Refresh dues after successful payment
+    } catch (err: any) {
+      showToast(err.response?.data || "Erreur lors du paiement de la cotisation.", "error");
     }
   };
 
@@ -215,7 +208,7 @@ const DuesTable: React.FC<DuesTableProps> = ({
                           ? "line-through"
                           : ""
                       }`}
-                      onClick={() => handlePay(due)}
+                      onClick={() => handlePayClick(due)}
                       disabled={
                         due.status === DuesStatus.PAID || !isAccountActive
                       }
@@ -258,6 +251,14 @@ const DuesTable: React.FC<DuesTableProps> = ({
             </button>
           </div>
         </div>
+      )}
+    {/* Render the new PayDueModal */}
+      {isPayDueModalOpen && selectedMemberDue && (
+        <PayDueModal
+          memberDue={selectedMemberDue}
+          onClose={() => setIsPayDueModalOpen(false)}
+          onPay={handlePaySubmit}
+        />
       )}
     </div>
   );
